@@ -448,6 +448,48 @@ function createAdditionalApplicantBlock(index) {
   return block;
 }
 
+// Ensure remove button is disabled when any field in the block has a value.
+function setupRemoveButtonBehavior(block) {
+  if (!block) return;
+  const removeBtn = block.querySelector('.remove-additional-applicant');
+  if (!removeBtn) return;
+
+  function isBlockEmpty() {
+    const fields = Array.from(block.querySelectorAll('input, select, textarea'));
+    return !fields.some(f => {
+      if (f.type === 'checkbox' || f.type === 'radio') return f.checked;
+      return String(f.value || '').trim() !== '';
+    });
+  }
+
+  function updateRemoveState() {
+    const empty = isBlockEmpty();
+    removeBtn.disabled = !empty ? true : false;
+    removeBtn.style.opacity = empty ? '1' : '0.5';
+    removeBtn.style.cursor = empty ? 'pointer' : 'not-allowed';
+    removeBtn.setAttribute('aria-disabled', (!empty).toString());
+  }
+
+  // Attach listeners to all fields in the block
+  const fields = Array.from(block.querySelectorAll('input, select, textarea'));
+  fields.forEach(f => {
+    f.addEventListener('input', updateRemoveState);
+    f.addEventListener('change', updateRemoveState);
+  });
+
+  // Initialize state
+  updateRemoveState();
+}
+
+function isApplicantBlockEmpty(block) {
+  if (!block) return true;
+  const fields = Array.from(block.querySelectorAll('input, select, textarea'));
+  return !fields.some(f => {
+    if (f.type === 'checkbox' || f.type === 'radio') return f.checked;
+    return String(f.value || '').trim() !== '';
+  });
+}
+
 function initializeAdditionalApplicants() {
   if (!addAdditionalApplicantBtn || !additionalApplicantsContainer) return;
 
@@ -461,6 +503,9 @@ function initializeAdditionalApplicants() {
     const block = createAdditionalApplicantBlock(visibleIndex);
     additionalApplicantsContainer.appendChild(block);
     initAdditionalApplicantPin(visibleIndex);
+
+    // Setup remove button behavior (enabled only when block is empty)
+    if (typeof setupRemoveButtonBehavior === 'function') setupRemoveButtonBehavior(block);
 
     const nameInput = block.querySelector("[id$='Name']");
 if (nameInput) nameInput.required = false;
@@ -481,6 +526,12 @@ if (nameInput) nameInput.required = false;
     if (!removeBtn) return;
     const block = removeBtn.closest(".additional-applicant-block");
     if (block) {
+      // Prevent removal if block contains any entered data
+      if (!isApplicantBlockEmpty(block)) {
+        alert("Cannot remove applicant: fields contain data. Clear fields to enable removal.");
+        return;
+      }
+
       block.remove();
 
       // Re-enable add button if below max
@@ -679,15 +730,31 @@ function createPaymentBlock(index) {
     dateInput.value = new Date().toISOString().split("T")[0];
   }
 
+  // Attach listeners to update remove button state when payment fields change
+  const inputs = Array.from(block.querySelectorAll('input'));
+  inputs.forEach(i => {
+    i.addEventListener('input', updatePaymentButtons);
+    i.addEventListener('change', updatePaymentButtons);
+  });
+
   return block;
 }
 
 function updatePaymentButtons() {
   if (!removePaymentBtn || !addPaymentBtn) return;
-  
   // Show remove button if at least 1 payment
-  removePaymentBtn.classList.toggle("hidden", paymentCount <= 0);
-  
+  if (paymentCount <= 0) {
+    removePaymentBtn.classList.add('hidden');
+  } else {
+    removePaymentBtn.classList.remove('hidden');
+  }
+
+  // Disable remove button if any payment block has entered data (prevent accidental deletion)
+  const anyPaymentHasData = isAnyPaymentHasData();
+  removePaymentBtn.disabled = anyPaymentHasData || paymentCount <= 0;
+  removePaymentBtn.style.opacity = removePaymentBtn.disabled ? '0.5' : '1';
+  removePaymentBtn.style.cursor = removePaymentBtn.disabled ? 'not-allowed' : 'pointer';
+
   // Disable/Hide add button if max reached (optional, or just disable)
   if (paymentCount >= MAX_PAYMENTS) {
     addPaymentBtn.disabled = true;
@@ -698,6 +765,18 @@ function updatePaymentButtons() {
     addPaymentBtn.style.opacity = "1";
     addPaymentBtn.style.cursor = "pointer";
   }
+}
+
+function isAnyPaymentHasData() {
+  const blocks = Array.from(document.querySelectorAll('.payment-block'));
+  return blocks.some(block => {
+    const inputs = Array.from(block.querySelectorAll('input'));
+    return inputs.some(i => {
+      // Ignore auto-filled date fields (utrDate...) — only consider other inputs as user-entered data
+      if (i.type === 'date' || /utrDate/i.test(i.id)) return false;
+      return String(i.value || '').trim() !== '';
+    });
+  });
 }
 
 if (loanStage) {
@@ -1018,6 +1097,8 @@ if (loanId) {
             const el = block.querySelector(`#${key}`);
             if (el) el.value = applicant[key];
           });
+          // After populating values, update remove button state
+          if (typeof setupRemoveButtonBehavior === 'function') setupRemoveButtonBehavior(block);
         });
 
         if (data.additionalApplicants.length >= MAX_ADDITIONAL_APPLICANTS) {
