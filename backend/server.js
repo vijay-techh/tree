@@ -13,7 +13,7 @@ const FRONTEND_PATH = path.join(__dirname, "../frontend");
 app.use(express.static(FRONTEND_PATH));
 
 /* LOGIN (TEMP) */
-app.post("/login", (req, res) => {
+app.post("/api/login", (req, res) => {
   const { username, password } = req.body;
   if (username === "user" && password === "1234") {
     return res.json({ success: true });
