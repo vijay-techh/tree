@@ -126,7 +126,3 @@ app.get("/api/leads", async (_, res) => {
 app.listen(3000, () =>
   console.log("🚀 WheelsWeb running at http://localhost:3000")
 );
-console.log("DB URL:", process.env.DATABASE_URL);
-pool.query('select 1')
-  .then(() => console.log('✅ DB connected'))
-  .catch(err => console.error('❌ DB error', err));
