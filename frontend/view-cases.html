@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>View All Cases | WheelsWeb</title>
+  <link rel="stylesheet" href="/css/dashboard.css" />
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="logo">WheelsWeb</div>
+  <nav class="sidebar-nav">
+    <a href="/dashboard.html" class="nav-item">Overview</a>
+    <a href="/new-lead.html" class="nav-item">New Lead</a>
+    <a href="/view-cases.html" class="nav-item active">View All Cases</a>
+  </nav>
+</aside>
+
+<main class="main">
+  <h2>All Leads</h2>
+
+  <!-- THIS TABLE MUST EXIST -->
+  <table id="leadsTable" border="1" cellpadding="10">
+    <thead>
+      <tr>
+        <th>Loan ID</th>
+        <th>Name</th>
+        <th>Mobile</th>
+        <th>Loan Amount</th>
+        <th>Action</th> <!-- 👈 ADD THIS -->
+
+      </tr>
+      
+    </thead>
+    <tbody></tbody>
+  </table>
+</main>
+
+<!-- JS MUST LOAD -->
+<script src="/js/view-cases.js"></script>
+</body>
+</html>

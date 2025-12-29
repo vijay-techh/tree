@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>WheelsWeb | Login
+  </title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="auth-page">
+    <section class="brand-panel">
+      <div class="brand-pill">WheelsWeb</div>
+      <h1>Smarter auto finance, simplified.</h1>
+      <p>Track disbursements, manage leads, and keep every sales conversation moving from one beautiful dashboard.</p>
+      <ul>
+        <li>Real-time performance monitoring</li>
+        <li>Lead prioritization built-in</li>
+        <li>Secure access for every advisor</li>
+      </ul>
+    </section>
+
+    <section class="auth-panel">
+      <div class="auth-card">
+        <p class="eyebrow">Welcome back</p>
+        <h2>Sign in to continue</h2>
+
+        <label class="input-field">
+          <span>Username</span>
+          <input type="text" id="username" placeholder="jane.doe" />
+        </label>
+
+        <label class="input-field">
+          <span>Password</span>
+          <input type="password" id="password" placeholder="••••••••" />
+        </label>
+
+        <button class="primary-btn" onclick="login()">Login</button>
+
+        <p id="error" aria-live="polite"></p>
+      </div>
+    </section>
+  </div>
+
+  <script src="/js/script.js"></script>
+</body>
+</html>
