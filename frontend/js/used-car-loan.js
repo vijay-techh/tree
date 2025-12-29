@@ -346,6 +346,14 @@ function createAdditionalApplicantBlock(index) {
         </select>
         <input id="additionalApplicant${index}CurrentLandmark" placeholder="LAND MARK" />
         <input id="additionalApplicant${index}CurrentPincode" placeholder="PIN CODE" />
+        <input id="additionalApplicant${index}CurrentDistrict" placeholder="DISTRICT" />
+            <select
+      id="additionalApplicant${index}CurrentPinDropdown"
+      class="hidden"
+      style="grid-column: span 2;"
+    >
+      <option value="">Select PIN</option>
+    </select>
         <select id="additionalApplicant${index}CurrentRelation">
           <option value="">OHP OWNER RELATION *</option>
           <option>SPOUSE</option>
@@ -356,28 +364,51 @@ function createAdditionalApplicantBlock(index) {
       </div>
     </div>
     <div class="sub-section">
-      <h5>Permanent Address</h5>
-      <div class="grid">
-        <select id="additionalApplicant${index}PermanentProof">
-          <option value="">ADDRESS PROOF *</option>
-          <option>Aadhaar</option>
-          <option>Voter ID</option>
-          <option>Gas Bill</option>
-          <option>EB Bill</option>
-          <option>Tax Paid Receipt</option>
-          <option>Rent Agreements</option>
-        </select>
-        <input id="additionalApplicant${index}PermanentLandmark" placeholder="LAND MARK" />
-        <input id="additionalApplicant${index}PermanentPincode" placeholder="PIN CODE" />
-        <select id="additionalApplicant${index}PermanentRelation">
-          <option value="">OHP OWNER RELATION *</option>
-          <option>SPOUSE</option>
-          <option>SELF-OWNED</option>
-          <option>PARANTEL</option>
-          <option>RENTED</option>
-        </select>
-      </div>
-    </div>
+  <h5>Permanent Address</h5>
+  <div class="grid">
+    <select id="additionalApplicant${index}PermanentProof">
+      <option value="">ADDRESS PROOF *</option>
+      <option>Aadhaar</option>
+      <option>Voter ID</option>
+      <option>Gas Bill</option>
+      <option>EB Bill</option>
+      <option>Tax Paid Receipt</option>
+      <option>Rent Agreements</option>
+    </select>
+
+    <input
+      id="additionalApplicant${index}PermanentLandmark"
+      placeholder="LAND MARK"
+    />
+
+    <input
+      id="additionalApplicant${index}PermanentPincode"
+      placeholder="PIN CODE"
+    />
+
+    <input
+      id="additionalApplicant${index}PermanentDistrict"
+      placeholder="DISTRICT"
+    />
+
+    <select
+      id="additionalApplicant${index}PermanentPinDropdown"
+      class="hidden"
+      style="grid-column: span 2;"
+    >
+      <option value="">Select PIN</option>
+    </select>
+
+    <select id="additionalApplicant${index}PermanentRelation">
+      <option value="">OHP OWNER RELATION *</option>
+      <option>SPOUSE</option>
+      <option>SELF-OWNED</option>
+      <option>PARANTEL</option>
+      <option>RENTED</option>
+    </select>
+  </div>
+</div>
+
     <div class="sub-section">
       <h5>Employment & Office</h5>
       <div class="grid">
@@ -429,6 +460,8 @@ function initializeAdditionalApplicants() {
     const visibleIndex = existingCount + 2;
     const block = createAdditionalApplicantBlock(visibleIndex);
     additionalApplicantsContainer.appendChild(block);
+    initAdditionalApplicantPin(visibleIndex);
+
     block.scrollIntoView({ behavior: "smooth", block: "center" });
 
     // Disable add button when max reached
@@ -466,12 +499,14 @@ const currentAddressFields = {
   proof: document.getElementById("currentAddressProof"),
   landmark: document.getElementById("currentLandmark"),
   pincode: document.getElementById("currentPincode"),
+  district: document.getElementById("currentDistrict"),
   relation: document.getElementById("currentOhpRelation")
 };
 const permanentAddressFields = {
   proof: document.getElementById("permanentAddressProof"),
   landmark: document.getElementById("permanentLandmark"),
   pincode: document.getElementById("permanentPincode"),
+  district: document.getElementById("permanentDistrict"),
   relation: document.getElementById("permanentOhpRelation")
 };
 
@@ -481,6 +516,9 @@ function copyFromCurrent() {
   permanentAddressFields.proof.value = currentAddressFields.proof.value;
   permanentAddressFields.landmark.value = currentAddressFields.landmark.value;
   permanentAddressFields.pincode.value = currentAddressFields.pincode.value;
+  if (permanentAddressFields.district && currentAddressFields.district) {
+    permanentAddressFields.district.value = currentAddressFields.district.value;
+  }
   permanentAddressFields.relation.value = currentAddressFields.relation.value;
 }
 
@@ -488,6 +526,7 @@ function clearPermanent() {
   permanentAddressFields.proof.value = "";
   permanentAddressFields.landmark.value = "";
   permanentAddressFields.pincode.value = "";
+  if (permanentAddressFields.district) permanentAddressFields.district.value = "";
   permanentAddressFields.relation.value = "";
 }
 
@@ -498,6 +537,7 @@ if (copyPermanentCheckbox) {
         proof: permanentAddressFields.proof.value,
         landmark: permanentAddressFields.landmark.value,
         pincode: permanentAddressFields.pincode.value,
+        district: permanentAddressFields.district?.value,
         relation: permanentAddressFields.relation.value
       };
       copyFromCurrent();
@@ -506,6 +546,7 @@ if (copyPermanentCheckbox) {
         permanentAddressFields.proof.value = savedPermanentValues.proof;
         permanentAddressFields.landmark.value = savedPermanentValues.landmark;
         permanentAddressFields.pincode.value = savedPermanentValues.pincode;
+        if (permanentAddressFields.district) permanentAddressFields.district.value = savedPermanentValues.district || "";
         permanentAddressFields.relation.value = savedPermanentValues.relation;
       } else {
         clearPermanent();
@@ -845,3 +886,140 @@ if (loanId) {
       });
     });
 }
+
+
+
+
+
+// ===== PIN ↔ DISTRICT REUSABLE MODULE =====
+
+const PIN_API = "https://api.postalpincode.in";
+
+// simple loader
+function setLoading(input, loading) {
+  input.style.background = loading ? "#f3f5f8" : "";
+}
+
+// debounce helper
+function debounce(fn, delay = 500) {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn(...args), delay);
+  };
+}
+
+function show(el) { el && el.classList.remove("hidden"); }
+function hide(el) { el && el.classList.add("hidden"); }
+
+// PIN → District
+async function handlePinToDistrict(pinInput, districtInput, dropdown) {
+  const pin = pinInput.value.trim();
+  if (!/^\d{6}$/.test(pin)) return;
+
+  setLoading(pinInput, true);
+
+  try {
+    const res = await fetch(`${PIN_API}/pincode/${pin}`);
+    const data = await res.json();
+
+    if (data[0].Status === "Success") {
+      districtInput.value = data[0].PostOffice[0].District;
+      hide(dropdown);
+    } else {
+      districtInput.value = "";
+      alert("Invalid PIN code");
+    }
+  } catch (e) {
+    console.error("PIN lookup failed", e);
+  } finally {
+    setLoading(pinInput, false);
+  }
+}
+
+// District → PIN dropdown
+async function handleDistrictToPin(districtInput, pinInput, dropdown) {
+  const district = districtInput.value.trim();
+  if (!district) return;
+
+  setLoading(districtInput, true);
+
+  try {
+    const res = await fetch(`${PIN_API}/postoffice/${district}`);
+    const data = await res.json();
+
+    if (data[0].Status !== "Success") {
+      hide(dropdown);
+      alert("Invalid District");
+      return;
+    }
+
+    dropdown.innerHTML = `<option value="">Select PIN</option>`;
+    data[0].PostOffice.forEach(po => {
+      const opt = document.createElement("option");
+      opt.value = po.Pincode;
+      opt.textContent = `${po.Pincode} – ${po.Name}`;
+      dropdown.appendChild(opt);
+    });
+
+    show(dropdown);
+  } catch (e) {
+    console.error("District lookup failed", e);
+  } finally {
+    setLoading(districtInput, false);
+  }
+}
+
+// Attach logic to any address block
+function initPinDistrict({ pinId, districtId, dropdownId }) {
+  const pin = document.getElementById(pinId);
+  const district = document.getElementById(districtId);
+  const dropdown = document.getElementById(dropdownId);
+
+  if (!pin || !district || !dropdown) return;
+
+  pin.addEventListener(
+    "blur",
+    debounce(() => handlePinToDistrict(pin, district, dropdown))
+  );
+
+  district.addEventListener(
+    "blur",
+    debounce(() => handleDistrictToPin(district, pin, dropdown))
+  );
+
+  dropdown.addEventListener("change", () => {
+    if (dropdown.value) {
+      pin.value = dropdown.value;
+      hide(dropdown);
+    }
+  });
+}
+
+initPinDistrict({
+  pinId: "currentPincode",
+  districtId: "currentDistrict",
+  dropdownId: "currentPinDropdown"
+});
+
+initPinDistrict({
+  pinId: "permanentPincode",
+  districtId: "permanentDistrict",
+  dropdownId: "permanentPinDropdown"
+});
+
+function initAdditionalApplicantPin(index) {
+  initPinDistrict({
+    pinId: `additionalApplicant${index}CurrentPincode`,
+    districtId: `additionalApplicant${index}CurrentDistrict`,
+    dropdownId: `additionalApplicant${index}CurrentPinDropdown`
+  });
+
+  initPinDistrict({
+    pinId: `additionalApplicant${index}PermanentPincode`,
+    districtId: `additionalApplicant${index}PermanentDistrict`,
+    dropdownId: `additionalApplicant${index}PermanentPinDropdown`
+  });
+}
+initAdditionalApplicantPin(visibleIndex);
+

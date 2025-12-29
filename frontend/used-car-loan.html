@@ -55,6 +55,9 @@
     .sub-section { margin-bottom: 18px; }
     .sub-section:last-of-type { margin-bottom: 0; }
     .sub-section h5 { margin-bottom: 8px; font-size: 15px; color: #3d4554; }
+        .hidden {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -219,6 +222,10 @@
         </select>
         <input id="currentLandmark" placeholder="LAND MARK *" required />
         <input id="currentPincode" placeholder="PIN CODE *" required />
+        <input id="currentDistrict" placeholder="DISTRICT *" required />
+                <select id="currentPinDropdown" class="hidden">
+          <option value="">Select PIN Code</option>
+        </select>
         <select id="currentOhpRelation" required>
           <option value="">OHP OWNER RELATION *</option>
           <option>SPOUSE</option><option>SELF-OWNED</option><option>PARANTEL</option><option>RENTED</option>
@@ -241,6 +248,11 @@
         </select>
         <input id="permanentLandmark" placeholder="LAND MARK *" required />
         <input id="permanentPincode" placeholder="PIN CODE *" required />
+        <input id="permanentDistrict" placeholder="DISTRICT *" required />
+        
+        <select id="permanentPinDropdown" class="hidden">
+          <option value="">Select PIN</option>
+        </select>
         <select id="permanentOhpRelation" required>
           <option value="">OHP OWNER RELATION *</option>
           <option>SPOUSE</option><option>SELF-OWNED</option><option>PARANTEL</option><option>RENTED</option>
