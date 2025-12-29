@@ -462,6 +462,9 @@ function initializeAdditionalApplicants() {
     additionalApplicantsContainer.appendChild(block);
     initAdditionalApplicantPin(visibleIndex);
 
+    const nameInput = block.querySelector("[id$='Name']");
+if (nameInput) nameInput.required = false;
+
     block.scrollIntoView({ behavior: "smooth", block: "center" });
 
     // Disable add button when max reached
@@ -765,24 +768,20 @@ document.getElementById("leadForm").addEventListener("submit", async (e) => {
 
   
     // Optional Additional Applicants
-  leadData.additionalApplicants = [];
+leadData.additionalApplicants = [];
 
-  document.querySelectorAll(".additional-applicant-block").forEach(block => {
-    const applicant = {};
-    let hasData = false;
-
-    block.querySelectorAll("input, select, textarea").forEach(el => {
-      if (!el.id) return;
-      if (el.value && el.value.trim() !== "") {
-        applicant[el.id] = el.value;
-        hasData = true;
-      }
-    });
-
-    if (hasData) {
-      leadData.additionalApplicants.push(applicant);
-    }
+document.querySelectorAll(".additional-applicant-block").forEach((block, index) => {
+  const applicant = {};
+  block.querySelectorAll("input, select, textarea").forEach(el => {
+    if (el.id) applicant[el.id] = el.value;
   });
+
+  // only store if user filled something
+  if (Object.values(applicant).some(v => v && v.trim() !== "")) {
+    leadData.additionalApplicants.push(applicant);
+  }
+});
+
 
   const res = await fetch("/api/leads", {
     method: "POST",
@@ -1044,5 +1043,5 @@ function initAdditionalApplicantPin(index) {
     dropdownId: `additionalApplicant${index}PermanentPinDropdown`
   });
 }
-initAdditionalApplicantPin(visibleIndex);
+// initAdditionalApplicantPin(visibleIndex);
 
