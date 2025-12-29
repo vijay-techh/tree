@@ -123,6 +123,26 @@ app.get("/api/leads", async (_, res) => {
   res.json(result.rows);
 });
 
+// DELETE lead by loanId
+app.delete("/api/leads/:loanId", async (req, res) => {
+  const { loanId } = req.params;
+  try {
+    const result = await pool.query(
+      "DELETE FROM leads WHERE loan_id = $1",
+      [loanId]
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ success: false, error: 'Not found' });
+    }
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error('DELETE ERROR:', err);
+    res.status(500).json({ success: false, error: 'Delete failed' });
+  }
+});
+
 
 
 
