@@ -280,6 +280,14 @@
       <input id="pan" placeholder="PAN NO *" required />
     </div>
 
+
+
+
+
+
+
+
+    
     <!-- Mobile + Add Button -->
     <div class="form-field">
       <label for="mobile">MOBILE NO *</label>
@@ -296,7 +304,7 @@
       </div>
     </div>
 
-    <div class="form-field hidden" id="extraAltMobileField">
+    <div class="form-field hidden" id="extraAltMobile">
       <label for="extraAltMobile">ALT NO</label>
       <input id="extraAltMobile" placeholder="ALT NO" />
     </div>
@@ -780,77 +788,180 @@
 
     <!-- DISBURSED LOAN INFORMATION -->
     <div id="disbursedFields" class="section hidden">
-      <h3>Loan Information</h3>
-      <div class="grid">
-        <input id="disbursedDate" type="date" title="DISBURSEMENT DATE" />
-        <input id="disbursedLoanAcNo" placeholder="LOAN AC NO" />
-        <select id="disbursedTenure">
-          <option value="">TENURE</option>
-        </select>
-        <input id="disbursedIrr" placeholder="IRR" />
-        <input id="disbursedEmiAmount" type="number" placeholder="EMI AMOUNT" />
-        <select id="disbursedEmiDate">
-          <option value="">EMI DATE</option>
-        </select>
-        <input id="disbursedSanctionLoanAmount" type="number" placeholder="SANCTION LOAN AMOUNT" />
-        <input id="disbursedLoanInsuranceCharges" type="number" placeholder="LOAN INSURANCE CHARGES" />
-        <input id="disbursedMotorInsurance" type="number" placeholder="MOTOR INSURANCE" />
-        <input id="disbursedTotalLoanAmount" type="number" placeholder="TOTAL LOAN AMOUNT" readonly />
-        <input id="disbursedPfCharges" type="number" placeholder="PF CHARGES" />
-        <input id="disbursedDocumentationCharges" type="number" placeholder="DOCUMENTATION CHARGES" />
-        <input id="disbursedOtherCharges" type="number" placeholder="OTHER CHARGES" />
-        <input id="disbursedRtoCharges" type="number" placeholder="RTO CHARGES" />
-        <input id="disbursedChallanFineCharges" type="number" placeholder="CHALLAN / FINE CHARGES" />
-        <input id="disbursedNetLoanAmount" type="number" placeholder="NET LOAN AMOUNT" readonly />
-        
-        <!-- RTO Documents Multi-Select -->
-        <div class="multi-select-container" style="grid-column: span 3;">
-          <label style="display:block; margin-bottom: 5px; font-weight: 600;">RTO Documents</label>
-          <div class="multi-select-display" id="rtoDocsDisplay">
-            <span class="multi-select-placeholder">Select RTO Documents...</span>
-          </div>
-          <div class="multi-select-dropdown" id="rtoDocsDropdown">
-            <!-- Options populated by JS -->
-          </div>
-          <input type="hidden" id="disbursedRtoDocs" />
+  <h3>Loan Information</h3>
+
+  <div class="grid">
+
+    <div class="form-field">
+      <label for="disbursedDate">DISBURSEMENT DATE</label>
+      <input id="disbursedDate" type="date" />
+    </div>
+
+    <div class="form-field">
+      <label for="disbursedLoanAcNo">LOAN AC NO</label>
+      <input id="disbursedLoanAcNo" placeholder="LOAN AC NO" />
+    </div>
+
+    <div class="form-field">
+      <label for="disbursedTenure">TENURE</label>
+      <select id="disbursedTenure">
+        <option value="">TENURE</option>
+      </select>
+    </div>
+
+    <div class="form-field">
+      <label for="disbursedIrr">IRR</label>
+      <input id="disbursedIrr" placeholder="IRR" />
+    </div>
+
+    <div class="form-field">
+      <label for="disbursedEmiAmount">EMI AMOUNT</label>
+      <input id="disbursedEmiAmount" type="number" placeholder="EMI AMOUNT" />
+    </div>
+
+    <div class="form-field">
+      <label for="disbursedEmiDate">EMI DATE</label>
+      <select id="disbursedEmiDate">
+        <option value="">EMI DATE</option>
+      </select>
+    </div>
+
+    <div class="form-field">
+      <label for="disbursedSanctionLoanAmount">SANCTION LOAN AMOUNT</label>
+      <input id="disbursedSanctionLoanAmount" type="number" />
+    </div>
+
+    <div class="form-field">
+      <label for="disbursedLoanInsuranceCharges">LOAN INSURANCE CHARGES</label>
+      <input id="disbursedLoanInsuranceCharges" type="number" />
+    </div>
+
+    <div class="form-field">
+      <label for="disbursedMotorInsurance">MOTOR INSURANCE</label>
+      <input id="disbursedMotorInsurance" type="number" />
+    </div>
+
+    <div class="form-field">
+      <label for="disbursedTotalLoanAmount">TOTAL LOAN AMOUNT</label>
+      <input id="disbursedTotalLoanAmount" type="number" readonly />
+    </div>
+
+    <div class="form-field">
+      <label for="disbursedPfCharges">PF CHARGES</label>
+      <input id="disbursedPfCharges" type="number" />
+    </div>
+
+    <div class="form-field">
+      <label for="disbursedDocumentationCharges">DOCUMENTATION CHARGES</label>
+      <input id="disbursedDocumentationCharges" type="number" />
+    </div>
+
+    <div class="form-field">
+      <label for="disbursedOtherCharges">OTHER CHARGES</label>
+      <input id="disbursedOtherCharges" type="number" />
+    </div>
+
+    <div class="form-field">
+      <label for="disbursedRtoCharges">RTO CHARGES</label>
+      <input id="disbursedRtoCharges" type="number" />
+    </div>
+
+    <div class="form-field">
+      <label for="disbursedChallanFineCharges">CHALLAN / FINE CHARGES</label>
+      <input id="disbursedChallanFineCharges" type="number" />
+    </div>
+
+    <div class="form-field">
+      <label for="disbursedNetLoanAmount">NET LOAN AMOUNT</label>
+      <input id="disbursedNetLoanAmount" type="number" readonly />
+    </div>
+
+    <!-- RTO DOCUMENTS -->
+    <div class="form-field" style="grid-column: span 3;">
+      <label>RTO DOCUMENTS</label>
+      <div class="multi-select-container">
+        <div class="multi-select-display" id="rtoDocsDisplay">
+          <span class="multi-select-placeholder">Select RTO Documents...</span>
         </div>
+        <div class="multi-select-dropdown" id="rtoDocsDropdown"></div>
+        <input type="hidden" id="disbursedRtoDocs" />
       </div>
     </div>
 
-    <!-- UTR INFORMATION -->
-    <div id="utrFields" class="section hidden">
-      <h3>UTR Information</h3>
-      <div id="paymentContainer"></div>
-      <div style="margin-top: 15px; display: flex; gap: 10px;">
-        <button type="button" id="addPaymentBtn" class="icon-btn plus-state" style="font-size: 14px; padding: 8px 16px;">+ Add Payment</button>
-        <button type="button" id="removePaymentBtn" class="icon-btn minus-state hidden" style="font-size: 14px; padding: 8px 16px;">- Remove Payment</button>
-      </div>
-    </div>
+  </div>
+</div>
 
-    <!-- MOTOR INSURANCE -->
+
+<div id="utrFields" class="section hidden">
+  <h3>UTR Information</h3>
+
+  <div id="paymentContainer"></div>
+
+  <div style="margin-top: 15px; display: flex; gap: 10px;">
+    <button type="button" id="addPaymentBtn" class="icon-btn plus-state">
+      + Add Payment
+    </button>
+    <button
+      type="button"
+      id="removePaymentBtn"
+      class="icon-btn minus-state hidden"
+    >
+      − Remove Payment
+    </button>
+  </div>
+</div>
+
+
     <div id="motorInsuranceFields" class="section hidden">
       <h3>Motor Insurance</h3>
+
       <div class="grid">
-        <input id="motorPolicyNumber" placeholder="POLICY NUMBER" />
-        <input id="motorInsuranceCompany" placeholder="INSURANCE COMPANY" />
-        <input id="motorIdvValue" type="number" placeholder="IDV VALUE" />
-        <input id="motorInsuranceExpiry" type="date" placeholder="INSURANCE EXPIRY DATE" />
-        <input id="motorInsuranceValidity" placeholder="VALIDITY (DAYS)" readonly />
+
+        <div class="form-field">
+          <label for="motorPolicyNumber">POLICY NUMBER</label>
+          <input id="motorPolicyNumber" />
+        </div>
+
+        <div class="form-field">
+          <label for="motorInsuranceCompany">INSURANCE COMPANY</label>
+          <input id="motorInsuranceCompany" />
+        </div>
+
+        <div class="form-field">
+          <label for="motorIdvValue">IDV VALUE</label>
+          <input id="motorIdvValue" type="number" />
+        </div>
+
+        <div class="form-field">
+          <label for="motorInsuranceExpiry">INSURANCE EXPIRY DATE</label>
+          <input id="motorInsuranceExpiry" type="date" />
+        </div>
+
+        <div class="form-field">
+          <label for="motorInsuranceValidity">VALIDITY (DAYS)</label>
+          <input id="motorInsuranceValidity" readonly />
+        </div>
+
       </div>
     </div>
+
 
     <!-- PDD STATUS -->
     <div id="pddStatusFields" class="section hidden">
       <h3>PDD Status</h3>
+
       <div class="grid">
-        <select id="pddStatus">
-          <option value="">SELECT PDD STATUS</option>
-          <option>Hypothecation Cancelled</option>
-          <option>CC Issued</option>
-          <option>Hypothecation Done</option>
-          <option>Name Transfered</option>
-          <option>RC Card Recieved</option>
-        </select>
+        <div class="form-field">
+          <label for="pddStatus">SELECT PDD STATUS</label>
+          <select id="pddStatus">
+            <option value="">SELECT PDD STATUS</option>
+            <option>Hypothecation Cancelled</option>
+            <option>CC Issued</option>
+            <option>Hypothecation Done</option>
+            <option>Name Transfered</option>
+            <option>RC Card Recieved</option>
+          </select>
+        </div>
       </div>
     </div>
 
@@ -864,5 +975,7 @@
 
 
 <script src="/js/used-car-loan.js"></script>
+
+
 </body>
 </html>
