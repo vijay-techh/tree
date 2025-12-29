@@ -753,6 +753,11 @@ Object.values(calcFields).forEach(el => {
 // Submit
 document.getElementById("leadForm").addEventListener("submit", async (e) => {
   e.preventDefault();
+// ####
+
+  if (loanStage && loanStage.value === "Disbursed") {
+    toggleDisbursedFields();
+  }
 
   const leadData = {};
   document.querySelectorAll("input, select, textarea").forEach(el => {
@@ -761,6 +766,28 @@ document.getElementById("leadForm").addEventListener("submit", async (e) => {
        leadData[el.id] = el.value;
     }
   });
+  // ================================
+// ✅ COLLECT UTR PAYMENTS
+// ================================
+leadData.payments = [];
+
+document.querySelectorAll(".payment-block").forEach(block => {
+  const payment = {};
+
+  block.querySelectorAll("input").forEach(input => {
+    if (input.id) {
+      payment[input.id] = input.value;
+    }
+  });
+
+  if (Object.values(payment).some(v => v && v.trim() !== "")) {
+    leadData.payments.push(payment);
+  }
+});
+
+// 🔍 Optional but recommended (debug once)
+
+console.log("SUBMIT DATA", leadData);
 
   leadData.loanType = "Used Car Loan";
 
@@ -782,6 +809,27 @@ document.querySelectorAll(".additional-applicant-block").forEach((block, index) 
   }
 });
 
+// ================================
+// ✅ COLLECT UTR PAYMENTS
+// ================================
+leadData.payments = [];
+
+document.querySelectorAll(".payment-block").forEach(block => {
+  const payment = {};
+
+  block.querySelectorAll("input").forEach(input => {
+    if (input.id) {
+      payment[input.id] = input.value;
+    }
+  });
+
+  if (Object.values(payment).some(v => v && v.trim() !== "")) {
+    leadData.payments.push(payment);
+  }
+});
+
+// 🔍 Optional but recommended (debug once)
+console.log("FINAL SUBMIT DATA", leadData);
 
   const res = await fetch("/api/leads", {
     method: "POST",
@@ -901,13 +949,91 @@ if (loanId) {
     .then(res => res.json())
     .then(lead => {
       const data = lead.data;
+      // ####
+      // =========================
+      // ✅ Restore UTR Payments (EDIT)
+      // =========================
+      if (Array.isArray(data.payments)) {
+        data.payments.forEach((payment, index) => {
+          const block = createPaymentBlock(index + 1);
+          paymentContainer.appendChild(block);
 
+          Object.keys(payment).forEach(key => {
+            const el = document.getElementById(key);
+            if (el) el.value = payment[key];
+          });
+
+          paymentCount = index + 1;
+        });
+
+        updatePaymentButtons();
+      }
+
+      // =========================
+      // 1️⃣ Restore normal fields
+      // =========================
       Object.keys(data).forEach(key => {
         const el = document.getElementById(key);
         if (el) el.value = data[key];
       });
+
+      // =========================
+      // 2️⃣ Restore CIBIL UI
+      // =========================
+      updateCibilDisplay(data.cibilScore);
+      setCibilIndicator(data.cibilIndicator);
+      // =========================
+      // 3️⃣ FORCE Disbursed fields to show on edit
+      // =========================
+      if (loanStage && loanStage.value === "Disbursed") {
+        toggleDisbursedFields();
+      }
+
+      // =========================
+      // 4️⃣ Restore RTO Documents
+      // =========================
+      if (data.disbursedRtoDocs) {
+        selectedRtoDocs = data.disbursedRtoDocs
+          .split(",")
+          .map(v => v.trim())
+          .filter(Boolean);
+
+        renderRtoDropdown();
+        updateRtoDisplay();
+      }
+
+      // =========================
+      // 3️⃣ Restore Additional Applicants
+      // =========================
+      if (Array.isArray(data.additionalApplicants)) {
+        data.additionalApplicants.forEach((applicant, idx) => {
+          if (idx >= MAX_ADDITIONAL_APPLICANTS) return;
+
+          const visibleIndex = idx + 2;
+          const block = createAdditionalApplicantBlock(visibleIndex);
+          additionalApplicantsContainer.appendChild(block);
+          initAdditionalApplicantPin(visibleIndex);
+
+          Object.keys(applicant).forEach(key => {
+            const el = block.querySelector(`#${key}`);
+            if (el) el.value = applicant[key];
+          });
+        });
+
+        if (data.additionalApplicants.length >= MAX_ADDITIONAL_APPLICANTS) {
+          addAdditionalApplicantBtn.disabled = true;
+          addAdditionalApplicantBtn.style.opacity = "0.5";
+        }
+      }
+    })
+    .catch(err => {
+      console.error("Failed to load lead", err);
     });
 }
+
+
+// ####
+
 
 
 
