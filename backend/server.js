@@ -123,10 +123,45 @@ app.get("/api/leads", async (_, res) => {
   res.json(result.rows);
 });
 
+
+
+
+// ===== PINCODE VALIDATION API =====
+app.post("/api/validate-pincode", async (req, res) => {
+  const { pincode, district } = req.body;
+
+  if (!pincode) {
+    return res.status(400).json({ error: "Pincode required" });
+  }
+
+  try {
+    const r = await fetch(
+      `https://api.postalpincode.in/pincode/${pincode}`
+    );
+    const d = await r.json();
+
+    if (d[0].Status !== "Success") {
+      return res.status(400).json({ error: "Invalid pincode" });
+    }
+
+    const apiDistrict = d[0].PostOffice[0].District;
+
+    if (
+      district &&
+      apiDistrict.toLowerCase() !== district.toLowerCase()
+    ) {
+      return res
+        .status(400)
+        .json({ error: "PIN–District mismatch" });
+    }
+
+    res.json({ ok: true, district: apiDistrict });
+  } catch (err) {
+    console.error("Pincode validation error", err);
+    res.status(500).json({ error: "Pincode validation failed" });
+  }
+});
+
 app.listen(3000, () =>
   console.log("🚀 WheelsWeb running at http://localhost:3000")
 );
-console.log("DB URL:", process.env.DATABASE_URL);
-pool.query('select 1')
-  .then(() => console.log('✅ DB connected'))
-  .catch(err => console.error('❌ DB error', err));

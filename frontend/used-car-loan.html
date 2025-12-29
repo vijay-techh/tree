@@ -55,6 +55,9 @@
     .sub-section { margin-bottom: 18px; }
     .sub-section:last-of-type { margin-bottom: 0; }
     .sub-section h5 { margin-bottom: 8px; font-size: 15px; color: #3d4554; }
+        .hidden {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -85,7 +88,7 @@
       <div>
         <label>Source</label>
         <select id="source">
-          <option>Self</option><option>Dealer</option><option>Bank</option><option>Walk-In</option><option>Telecall</option><option>Online</option><option>Others</option>
+          <option>Self</option><option>Dealer</option><option>Bank</option><option>Walk-In</option><option>Telecall</option><option>Online</option><option>NC Customer</option><option>UC Customer</option><option>Others</option>
         </select>
       </div>
       
@@ -219,6 +222,10 @@
         </select>
         <input id="currentLandmark" placeholder="LAND MARK *" required />
         <input id="currentPincode" placeholder="PIN CODE *" required />
+        <input id="currentDistrict" placeholder="DISTRICT *" required />
+                <select id="currentPinDropdown" class="hidden">
+          <option value="">Select PIN Code</option>
+        </select>
         <select id="currentOhpRelation" required>
           <option value="">OHP OWNER RELATION *</option>
           <option>SPOUSE</option><option>SELF-OWNED</option><option>PARANTEL</option><option>RENTED</option>
@@ -241,6 +248,11 @@
         </select>
         <input id="permanentLandmark" placeholder="LAND MARK *" required />
         <input id="permanentPincode" placeholder="PIN CODE *" required />
+        <input id="permanentDistrict" placeholder="DISTRICT *" required />
+        
+        <select id="permanentPinDropdown" class="hidden">
+          <option value="">Select PIN</option>
+        </select>
         <select id="permanentOhpRelation" required>
           <option value="">OHP OWNER RELATION *</option>
           <option>SPOUSE</option><option>SELF-OWNED</option><option>PARANTEL</option><option>RENTED</option>
@@ -321,7 +333,84 @@
 
         <select id="bankFinance" required>
           <option value="">BANK / FINANCE *</option>
-          <option>NONE</option><option>AXIS BANK</option><option>Piramal</option><option>Mahindra Finance</option><option>Poonawalla Fincorp</option><option>IDFC First Bank (Urban & Rural)</option><option>HDFC Bank</option><option>HDB FINANCE</option><option>Bajaj Finserv</option><option>ICICI Bank</option><option>YES BANK LTD</option><option>Tata Capital</option><option>TVS Credit</option><option>Muthoot Capital</option><option>INDUSIND Bank</option><option>EQUITAS SMALL FINANCE BANK</option><option>Toyota Financial</option><option>Manappuram Finance Limited</option><option>AU FINANCE</option><option>Cholamandalam Investment And Finance Company</option><option>Saraswat Co-operative Bank</option><option>Kotak Mahindra</option><option>Bandhan Bank</option><option>Kogta Financier</option><option>Muthoot Money</option><option>Fortune Finance</option><option>Ambit Finvest Private Limited</option><option>IKF Finance (White Board Cars)</option><option>Mahaveer Finance</option><option>Indostar Finance</option><option>Vaasthu Finance</option><option>Praveen Capital</option>
+          <option>NONE</option>
+          <optgroup label="Banks (Public & Private)">
+            <option>Axis Bank</option>
+            <option>Bank of Baroda</option>
+            <option>Bank of India</option>
+            <option>Bank of Maharashtra</option>
+            <option>Canara Bank</option>
+            <option>Central Bank of India</option>
+            <option>City Union Bank</option>
+            <option>Csb Bank</option>
+            <option>Dcb Bank</option>
+            <option>Dhanlaxmi Bank</option>
+            <option>Hdfc Bank</option>
+            <option>Icici Bank</option>
+            <option>Idbi Bank</option>
+            <option>Idfc First Bank</option>
+            <option>Indian Bank</option>
+            <option>Indian Overseas Bank</option>
+            <option>Indusind Bank</option>
+            <option>Jammu & Kashmir Bank</option>
+            <option>Karnataka Bank</option>
+            <option>Karur Vysya Bank</option>
+            <option>Kotak Mahindra Bank</option>
+            <option>Punjab & Sind Bank</option>
+            <option>Punjab National Bank</option>
+            <option>Rbl Bank</option>
+            <option>Saraswat Co-operative Bank Ltd</option>
+            <option>South Indian Bank</option>
+            <option>State Bank of India</option>
+            <option>Tamilnad Mercantile Bank</option>
+            <option>The Federal Bank Ltd</option>
+            <option>Uco Bank</option>
+            <option>Union Bank of India</option>
+            <option>Yes Bank</option>
+          </optgroup>
+          <optgroup label="Non-Banking Financial Companies (NBFCs) & Fintechs">
+            <option>Aditya Birla Finance Ltd.</option>
+            <option>Ambit Finvest</option>
+            <option>Bajaj Finance Ltd.</option>
+            <option>Bajaj Finserv</option>
+            <option>Cholamandalam</option>
+            <option>Cholamandalam Investment & Finance</option>
+            <option>Girnar</option>
+            <option>Hdb Finance</option>
+            <option>Hero finance</option>
+            <option>Ikf Finance</option>
+            <option>Indostar Capital Finance Ltd</option>
+            <option>Iti Finance (Fortune)</option>
+            <option>Kogta</option>
+            <option>L&t Finance Ltd.</option>
+            <option>Loans24</option>
+            <option>Mahindra</option>
+            <option>Mahindra & Mahindra Financial Services</option>
+            <option>Manappuram</option>
+            <option>Muthoot Capital</option>
+            <option>Muthoot Finance Ltd.</option>
+            <option>Muthoot Money</option>
+            <option>Piramal</option>
+            <option>Poonawalla Fincorp</option>
+            <option>Power Finance Corporation Ltd</option>
+            <option>Shriram Finance Ltd</option>
+            <option>Shriram Transport Finance</option>
+            <option>Sk Finance</option>
+            <option>Suneet Finman</option>
+            <option>Tata Capital</option>
+            <option>Toyota Finance</option>
+            <option>Trillion Loans</option>
+            <option>Tvs Credit</option>
+            <option>Vasthu</option>
+          </optgroup>
+          <optgroup label="Small Finance Banks (SFBs)">
+            <option>Au</option>
+            <option>Bandhan Bank</option>
+            <option>Equitas</option>
+            <option>Esaf Small Finance Bank Ltd</option>
+            <option>Jana Small Finance Bank</option>
+            <option>Suryoday Small Finance Bank Ltd</option>
+          </optgroup>
         </select>
         <input id="bankBranch" placeholder="BRANCH *" required />
         <input id="loginExecutive" placeholder="LOGIN ASSIGNED *" required data-uppercase />
