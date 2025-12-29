@@ -146,6 +146,7 @@ const motorInsuranceFields = document.getElementById("motorInsuranceFields");
 const addAdditionalApplicantBtn = document.getElementById("addAdditionalApplicantBtn");
 const additionalApplicantsContainer = document.getElementById("additionalApplicantsContainer");
 let additionalApplicantCount = 0;
+const MAX_ADDITIONAL_APPLICANTS = 2;
 
 function updateCibilDisplay(score) {
   if (!cibilDisplay) return;
@@ -295,8 +296,21 @@ function createAdditionalApplicantBlock(index) {
       <div class="grid">
         <select id="additionalApplicant${index}Type">
           <option value="">APPLICANT TYPE *</option>
-          <option value="Co-Applicant">Co-Applicant</option>
-          <option value="Guarantor">Guarantor</option>
+          ${index === 3 ? '<option value="Guarantor">Guarantor</option>' : '<option value="Co-Applicant">Co-Applicant</option><option value="Guarantor">Guarantor</option>'}
+        </select>
+        <select id="additionalApplicant${index}Relation">
+          <option value="">APPLICANT RELATION</option>
+          <option>Spouse</option>
+          <option>Father</option>
+          <option>Mother</option>
+          <option>Brother</option>
+          <option>Sister</option>
+          <option>Son</option>
+          <option>Daughter</option>
+          <option>Grand Father</option>
+          <option>Grand Mother</option>
+          <option>Friend</option>
+          <option>Relative</option>
         </select>
         <input id="additionalApplicant${index}Name" placeholder="NAME *" data-uppercase />
         <select id="additionalApplicant${index}Gender">
@@ -308,6 +322,14 @@ function createAdditionalApplicantBlock(index) {
         <input id="additionalApplicant${index}Pan" placeholder="PAN NO" />
         <input id="additionalApplicant${index}Mobile" placeholder="MOBILE NO" />
         <input id="additionalApplicant${index}Email" type="email" placeholder="EMAIL ID" />
+        <select id="additionalApplicant${index}MaritalStatus">
+          <option value="">MARITAL STATUS</option>
+          <option>Single</option>
+          <option>Married</option>
+          <option>Divorced</option>
+        </select>
+        <input id="additionalApplicant${index}FatherName" placeholder="FATHER NAME" data-uppercase />
+        <input id="additionalApplicant${index}MotherName" placeholder="MOTHER NAME" data-uppercase />
       </div>
     </div>
     <div class="sub-section">
@@ -399,10 +421,23 @@ function initializeAdditionalApplicants() {
   if (!addAdditionalApplicantBtn || !additionalApplicantsContainer) return;
 
   addAdditionalApplicantBtn.addEventListener("click", () => {
-    additionalApplicantCount += 1;
-    const block = createAdditionalApplicantBlock(additionalApplicantCount);
+    if (!additionalApplicantsContainer) return;
+    const existingCount = additionalApplicantsContainer.querySelectorAll('.additional-applicant-block').length;
+    if (existingCount >= MAX_ADDITIONAL_APPLICANTS) return;
+
+    // Visible applicant numbers should be 2 and 3 (primary applicant is 1)
+    const visibleIndex = existingCount + 2;
+    const block = createAdditionalApplicantBlock(visibleIndex);
     additionalApplicantsContainer.appendChild(block);
     block.scrollIntoView({ behavior: "smooth", block: "center" });
+
+    // Disable add button when max reached
+    const newCount = additionalApplicantsContainer.querySelectorAll('.additional-applicant-block').length;
+    if (newCount >= MAX_ADDITIONAL_APPLICANTS) {
+      addAdditionalApplicantBtn.disabled = true;
+      addAdditionalApplicantBtn.style.opacity = '0.5';
+      addAdditionalApplicantBtn.style.cursor = 'not-allowed';
+    }
   });
 
   additionalApplicantsContainer.addEventListener("click", (event) => {
@@ -411,6 +446,14 @@ function initializeAdditionalApplicants() {
     const block = removeBtn.closest(".additional-applicant-block");
     if (block) {
       block.remove();
+
+      // Re-enable add button if below max
+      const newCount = additionalApplicantsContainer.querySelectorAll('.additional-applicant-block').length;
+      if (newCount < MAX_ADDITIONAL_APPLICANTS) {
+        addAdditionalApplicantBtn.disabled = false;
+        addAdditionalApplicantBtn.style.opacity = '1';
+        addAdditionalApplicantBtn.style.cursor = 'pointer';
+      }
     }
   });
 }
