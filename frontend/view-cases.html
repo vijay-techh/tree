@@ -4,6 +4,20 @@
   <meta charset="UTF-8" />
   <title>View All Cases | WheelsWeb</title>
   <link rel="stylesheet" href="/css/dashboard.css" />
+  <style>
+    .toolbar { display:flex; gap:12px; align-items:center; margin: 16px 0; }
+    .toolbar .spacer { flex:1 }
+    input.search { padding:8px 10px; width:320px; border-radius:6px; border:1px solid #d3d7de }
+    select, button { padding:8px 10px; border-radius:6px; border:1px solid #d3d7de; background:#fff }
+    table.leads { width:100%; border-collapse:collapse; margin-top:8px; }
+    table.leads th, table.leads td { text-align:left; padding:12px; border-bottom:1px solid #eef1f6 }
+    table.leads th { background:#f7f9fb; font-weight:600 }
+    .actions a, .actions button { margin-right:8px }
+    .pagination { display:flex; gap:8px; align-items:center; margin-top:12px }
+    .modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.4); display:none; align-items:center; justify-content:center }
+    .modal { background:#fff; padding:16px; width:900px; max-width:95%; border-radius:8px; max-height:80vh; overflow:auto }
+    .empty-state { padding:30px; text-align:center; color:#6b7280 }
+  </style>
 </head>
 <body>
 
@@ -19,21 +33,50 @@
 <main class="main">
   <h2>All Leads</h2>
 
-  <!-- THIS TABLE MUST EXIST -->
-  <table id="leadsTable" border="1" cellpadding="10">
+  <div class="toolbar">
+    <input id="searchInput" class="search" placeholder="Search by Loan ID, Name or Mobile" />
+    <select id="filterStage">
+      <option value="">All Stages</option>
+    </select>
+    <select id="rowsPerPage">
+      <option value="10">10 / page</option>
+      <option value="25">25 / page</option>
+      <option value="50">50 / page</option>
+    </select>
+    <div class="spacer"></div>
+    <button id="refreshBtn">Refresh</button>
+  </div>
+
+  <table id="leadsTable" class="leads">
     <thead>
       <tr>
-        <th>Loan ID</th>
+        <th>Loan ID</th>     
         <th>Name</th>
         <th>Mobile</th>
         <th>Loan Amount</th>
-        <th>Action</th> <!-- 👈 ADD THIS -->
-
+        <th>DSA / Bank</th>
+        <th>Stage</th>
+        <th>Updated</th>
+        <th>Actions</th>
       </tr>
-      
     </thead>
     <tbody></tbody>
   </table>
+
+  <div id="emptyState" class="empty-state hidden">No leads found — try creating a new lead.</div>
+
+  <div class="pagination" id="pagination"></div>
+
+  <!-- Modal for lead details -->
+  <div id="leadModalBackdrop" class="modal-backdrop">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <h3 id="modalTitle">Lead Details</h3>
+        <button id="closeModal">Close</button>
+      </div>
+      <pre id="modalContent" style="white-space:pre-wrap;font-family:ui-monospace, SFMono-Regular, Menlo, monospace"></pre>
+    </div>
+  </div>
 </main>
 
 <!-- JS MUST LOAD -->
