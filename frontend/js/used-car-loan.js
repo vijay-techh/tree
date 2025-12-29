@@ -291,159 +291,282 @@ function createAdditionalApplicantBlock(index) {
       <h4>Applicant ${index}</h4>
       <button type="button" class="icon-btn minus-state compact remove-additional-applicant" data-target="${index}" aria-label="Remove applicant ${index}">− Remove</button>
     </div>
-    <div class="sub-section">
+     <div class="sub-section">
       <h5>Applicant Profile</h5>
+
       <div class="grid">
-        <select id="additionalApplicant${index}Type">
-          <option value="">APPLICANT TYPE *</option>
-          ${index === 3 ? '<option value="Guarantor">Guarantor</option>' : '<option value="Co-Applicant">Co-Applicant</option><option value="Guarantor">Guarantor</option>'}
-        </select>
-        <select id="additionalApplicant${index}Relation">
-          <option value="">APPLICANT RELATION</option>
-          <option>Spouse</option>
-          <option>Father</option>
-          <option>Mother</option>
-          <option>Brother</option>
-          <option>Sister</option>
-          <option>Son</option>
-          <option>Daughter</option>
-          <option>Grand Father</option>
-          <option>Grand Mother</option>
-          <option>Friend</option>
-          <option>Relative</option>
-        </select>
-        <input id="additionalApplicant${index}Name" placeholder="NAME *" data-uppercase />
-        <select id="additionalApplicant${index}Gender">
-          <option value="">GENDER *</option>
-          <option>Male</option>
-          <option>Female</option>
-          <option>Rather Not To Say</option>
-        </select>
-        <input id="additionalApplicant${index}Pan" placeholder="PAN NO" />
-        <input id="additionalApplicant${index}Mobile" placeholder="MOBILE NO" />
-        <input id="additionalApplicant${index}Email" type="email" placeholder="EMAIL ID" />
-        <select id="additionalApplicant${index}MaritalStatus">
-          <option value="">MARITAL STATUS</option>
-          <option>Single</option>
-          <option>Married</option>
-          <option>Divorced</option>
-        </select>
-        <input id="additionalApplicant${index}FatherName" placeholder="FATHER NAME" data-uppercase />
-        <input id="additionalApplicant${index}MotherName" placeholder="MOTHER NAME" data-uppercase />
+
+        <div class="form-field">
+          <label for="additionalApplicant${index}Type">APPLICANT TYPE *</label>
+          <select id="additionalApplicant${index}Type">
+            <option value="">APPLICANT TYPE *</option>
+            ${index === 3
+              ? '<option value="Guarantor">Guarantor</option>'
+              : '<option value="Co-Applicant">Co-Applicant</option><option value="Guarantor">Guarantor</option>'}
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label for="additionalApplicant${index}Relation">APPLICANT RELATION</label>
+          <select id="additionalApplicant${index}Relation">
+            <option value="">APPLICANT RELATION</option>
+            <option>Spouse</option><option>Father</option><option>Mother</option>
+            <option>Brother</option><option>Sister</option>
+            <option>Son</option><option>Daughter</option>
+            <option>Grand Father</option><option>Grand Mother</option>
+            <option>Friend</option><option>Relative</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label for="additionalApplicant${index}Name">NAME *</label>
+          <input id="additionalApplicant${index}Name" placeholder="NAME *" data-uppercase />
+        </div>
+
+        <div class="form-field">
+          <label for="additionalApplicant${index}Gender">GENDER *</label>
+          <select id="additionalApplicant${index}Gender">
+            <option value="">GENDER *</option>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Rather Not To Say</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label for="additionalApplicant${index}Pan">PAN NO</label>
+          <input id="additionalApplicant${index}Pan" placeholder="PAN NO" />
+        </div>
+
+        <div class="form-field">
+          <label for="additionalApplicant${index}Mobile">MOBILE NO</label>
+          <input id="additionalApplicant${index}Mobile" placeholder="MOBILE NO" />
+        </div>
+
+        <div class="form-field">
+          <label for="additionalApplicant${index}Email">EMAIL ID</label>
+          <input id="additionalApplicant${index}Email" type="email" placeholder="EMAIL ID" />
+        </div>
+
+        <div class="form-field">
+          <label for="additionalApplicant${index}MaritalStatus">MARITAL STATUS</label>
+          <select id="additionalApplicant${index}MaritalStatus">
+            <option value="">MARITAL STATUS</option>
+            <option>Single</option>
+            <option>Married</option>
+            <option>Divorced</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label for="additionalApplicant${index}FatherName">FATHER NAME</label>
+          <input id="additionalApplicant${index}FatherName" placeholder="FATHER NAME" data-uppercase />
+        </div>
+
+        <div class="form-field">
+          <label for="additionalApplicant${index}MotherName">MOTHER NAME</label>
+          <input id="additionalApplicant${index}MotherName" placeholder="MOTHER NAME" data-uppercase />
+        </div>
+
       </div>
     </div>
+
     <div class="sub-section">
-      <h5>Current Address</h5>
-      <div class="grid">
-        <select id="additionalApplicant${index}CurrentProof">
-          <option value="">ADDRESS PROOF *</option>
-          <option>Aadhaar</option>
-          <option>Voter ID</option>
-          <option>Gas Bill</option>
-          <option>EB Bill</option>
-          <option>Tax Paid Receipt</option>
-          <option>Rent Agreements</option>
-        </select>
-        <input id="additionalApplicant${index}CurrentLandmark" placeholder="LAND MARK" />
-        <input id="additionalApplicant${index}CurrentPincode" placeholder="PIN CODE" />
-        <input id="additionalApplicant${index}CurrentDistrict" placeholder="DISTRICT" />
-            <select
-      id="additionalApplicant${index}CurrentPinDropdown"
-      class="hidden"
-      style="grid-column: span 2;"
-    >
-      <option value="">Select PIN</option>
-    </select>
-        <select id="additionalApplicant${index}CurrentRelation">
-          <option value="">OHP OWNER RELATION *</option>
-          <option>SPOUSE</option>
-          <option>SELF-OWNED</option>
-          <option>PARANTEL</option>
-          <option>RENTED</option>
-        </select>
-      </div>
-    </div>
-    <div class="sub-section">
-  <h5>Permanent Address</h5>
+  <h5>Current Address</h5>
+
   <div class="grid">
-    <select id="additionalApplicant${index}PermanentProof">
-      <option value="">ADDRESS PROOF *</option>
-      <option>Aadhaar</option>
-      <option>Voter ID</option>
-      <option>Gas Bill</option>
-      <option>EB Bill</option>
-      <option>Tax Paid Receipt</option>
-      <option>Rent Agreements</option>
-    </select>
 
-    <input
-      id="additionalApplicant${index}PermanentLandmark"
-      placeholder="LAND MARK"
-    />
+    <div class="form-field">
+      <label for="additionalApplicant${index}CurrentProof">ADDRESS PROOF *</label>
+      <select id="additionalApplicant${index}CurrentProof">
+        <option value="">ADDRESS PROOF *</option>
+        <option>Aadhaar</option>
+        <option>Voter ID</option>
+        <option>Gas Bill</option>
+        <option>EB Bill</option>
+        <option>Tax Paid Receipt</option>
+        <option>Rent Agreements</option>
+      </select>
+    </div>
 
-    <input
-      id="additionalApplicant${index}PermanentPincode"
-      placeholder="PIN CODE"
-    />
+    <div class="form-field">
+      <label for="additionalApplicant${index}CurrentLandmark">LAND MARK</label>
+      <input
+        id="additionalApplicant${index}CurrentLandmark"
+        placeholder="LAND MARK"
+      />
+    </div>
 
-    <input
-      id="additionalApplicant${index}PermanentDistrict"
-      placeholder="DISTRICT"
-    />
+    <div class="form-field">
+      <label for="additionalApplicant${index}CurrentPincode">PIN CODE</label>
+      <input
+        id="additionalApplicant${index}CurrentPincode"
+        placeholder="PIN CODE"
+      />
+    </div>
 
-    <select
-      id="additionalApplicant${index}PermanentPinDropdown"
-      class="hidden"
-      style="grid-column: span 2;"
-    >
-      <option value="">Select PIN</option>
-    </select>
+    <div class="form-field">
+      <label for="additionalApplicant${index}CurrentDistrict">DISTRICT</label>
+      <input
+        id="additionalApplicant${index}CurrentDistrict"
+        placeholder="DISTRICT"
+      />
+    </div>
 
-    <select id="additionalApplicant${index}PermanentRelation">
-      <option value="">OHP OWNER RELATION *</option>
-      <option>SPOUSE</option>
-      <option>SELF-OWNED</option>
-      <option>PARANTEL</option>
-      <option>RENTED</option>
-    </select>
+    <div class="form-field hidden" style="grid-column: span 2;">
+      <label for="additionalApplicant${index}CurrentPinDropdown">SELECT PIN</label>
+      <select id="additionalApplicant${index}CurrentPinDropdown">
+        <option value="">Select PIN</option>
+      </select>
+    </div>
+
+    <div class="form-field">
+      <label for="additionalApplicant${index}CurrentRelation">OHP OWNER RELATION *</label>
+      <select id="additionalApplicant${index}CurrentRelation">
+        <option value="">OHP OWNER RELATION *</option>
+        <option>SPOUSE</option>
+        <option>SELF-OWNED</option>
+        <option>PARANTEL</option>
+        <option>RENTED</option>
+      </select>
+    </div>
+
   </div>
 </div>
 
-    <div class="sub-section">
-      <h5>Employment & Office</h5>
-      <div class="grid">
-        <select id="additionalApplicant${index}EmploymentProfile">
-          <option value="">CUSTOMER PROFILE *</option>
-          <option>Self-Employed</option>
-          <option>Salaried</option>
-          <option>ITR</option>
-          <option>Agriculture</option>
-          <option>Pension</option>
-        </select>
-        <input id="additionalApplicant${index}BusinessName" placeholder="BUSINESS / OFFICE / DESIGNATION NAME" />
-        <input id="additionalApplicant${index}MonthlyIncome" type="number" placeholder="MONTHLY INCOME" />
-        <select id="additionalApplicant${index}BusinessProof">
-          <option value="">BUSINESS PROOF *</option>
-          <option>NIP</option>
-          <option>Pay slips</option>
-          <option>RTC</option>
-          <option>GST</option>
-          <option>ITR</option>
-          <option>License</option>
-          <option>Pension Statements</option>
-        </select>
-        <textarea id="additionalApplicant${index}OfficeAddress" placeholder="FULL ADDRESS" style="grid-column: span 3;"></textarea>
-      </div>
+<div class="sub-section">
+  <h5>Permanent Address</h5>
+
+  <div class="grid">
+
+    <div class="form-field">
+      <label for="additionalApplicant${index}PermanentProof">ADDRESS PROOF *</label>
+      <select id="additionalApplicant${index}PermanentProof">
+        <option value="">ADDRESS PROOF *</option>
+        <option>Aadhaar</option>
+        <option>Voter ID</option>
+        <option>Gas Bill</option>
+        <option>EB Bill</option>
+        <option>Tax Paid Receipt</option>
+        <option>Rent Agreements</option>
+      </select>
     </div>
-    <div class="sub-section">
-      <h5>Ref Contact</h5>
-      <div class="grid" style="grid-template-columns: repeat(2, 1fr);">
-        <input id="additionalApplicant${index}RefMob1" placeholder="MOBILE NO" />
-        <input id="additionalApplicant${index}RefName1" placeholder="NAME" data-uppercase />
-        <input id="additionalApplicant${index}RefMob2" placeholder="MOBILE NO" />
-        <input id="additionalApplicant${index}RefName2" placeholder="NAME" data-uppercase />
-      </div>
+
+    <div class="form-field">
+      <label for="additionalApplicant${index}PermanentLandmark">LAND MARK</label>
+      <input
+        id="additionalApplicant${index}PermanentLandmark"
+        placeholder="LAND MARK"
+      />
     </div>
+
+    <div class="form-field">
+      <label for="additionalApplicant${index}PermanentPincode">PIN CODE</label>
+      <input
+        id="additionalApplicant${index}PermanentPincode"
+        placeholder="PIN CODE"
+      />
+    </div>
+
+    <div class="form-field">
+      <label for="additionalApplicant${index}PermanentDistrict">DISTRICT</label>
+      <input
+        id="additionalApplicant${index}PermanentDistrict"
+        placeholder="DISTRICT"
+      />
+    </div>
+
+    <div class="form-field hidden" style="grid-column: span 2;">
+      <label for="additionalApplicant${index}PermanentPinDropdown">SELECT PIN</label>
+      <select id="additionalApplicant${index}PermanentPinDropdown">
+        <option value="">Select PIN</option>
+      </select>
+    </div>
+
+    <div class="form-field">
+      <label for="additionalApplicant${index}PermanentRelation">OHP OWNER RELATION *</label>
+      <select id="additionalApplicant${index}PermanentRelation">
+        <option value="">OHP OWNER RELATION *</option>
+        <option>SPOUSE</option>
+        <option>SELF-OWNED</option>
+        <option>PARANTEL</option>
+        <option>RENTED</option>
+      </select>
+    </div>
+
+  </div>
+</div>
+
+
+    <div class="sub-section">
+  <h5>Employment & Office</h5>
+
+  <div class="grid">
+
+    <div class="form-field">
+      <label for="additionalApplicant${index}EmploymentProfile">
+        CUSTOMER PROFILE *
+      </label>
+      <select id="additionalApplicant${index}EmploymentProfile">
+        <option value="">CUSTOMER PROFILE *</option>
+        <option>Self-Employed</option>
+        <option>Salaried</option>
+        <option>ITR</option>
+        <option>Agriculture</option>
+        <option>Pension</option>
+      </select>
+    </div>
+
+    <div class="form-field">
+      <label for="additionalApplicant${index}BusinessName">
+        BUSINESS / OFFICE / DESIGNATION NAME
+      </label>
+      <input
+        id="additionalApplicant${index}BusinessName"
+        placeholder="BUSINESS / OFFICE / DESIGNATION NAME"
+      />
+    </div>
+
+    <div class="form-field">
+      <label for="additionalApplicant${index}MonthlyIncome">
+        MONTHLY INCOME
+      </label>
+      <input
+        id="additionalApplicant${index}MonthlyIncome"
+        type="number"
+        placeholder="MONTHLY INCOME"
+      />
+    </div>
+
+    <div class="form-field">
+      <label for="additionalApplicant${index}BusinessProof">
+        BUSINESS PROOF *
+      </label>
+      <select id="additionalApplicant${index}BusinessProof">
+        <option value="">BUSINESS PROOF *</option>
+        <option>NIP</option>
+        <option>Pay slips</option>
+        <option>RTC</option>
+        <option>GST</option>
+        <option>ITR</option>
+        <option>License</option>
+        <option>Pension Statements</option>
+      </select>
+    </div>
+
+    <div class="form-field" style="grid-column: span 3;">
+      <label for="additionalApplicant${index}OfficeAddress">
+        FULL ADDRESS
+      </label>
+      <textarea
+        id="additionalApplicant${index}OfficeAddress"
+        placeholder="FULL ADDRESS"
+      ></textarea>
+    </div>
+
+  </div>
+</div>
+
   `;
   return block;
 }
@@ -661,17 +784,80 @@ function createPaymentBlock(index) {
   block.style.borderTop = index === 1 ? "none" : "1px solid #eee";
   block.style.paddingTop = index === 1 ? "0" : "15px";
   block.innerHTML = `
-      <h4 style="margin-bottom: 10px; color: #555;">Payment ${index}</h4>
-      <div class="grid">
-        <input id="utrDate${index}" type="date" title="DATE" />
-        <input id="utrAmount${index}" type="number" placeholder="AMOUNT" />
-        <input id="utrNo${index}" placeholder="UTR NO" data-uppercase />
-        <input id="utrAcHolderName${index}" placeholder="AC HOLDER NAME" data-uppercase />
-        <input id="utrBankName${index}" placeholder="BANK NAME" data-uppercase />
-        <input id="utrAcNo${index}" placeholder="AC NO" />
-        <input id="utrIfsc${index}" placeholder="IFSC" data-uppercase />
-        <input id="utrRemarks${index}" placeholder="REMARKS" />
+          <h4 style="margin-bottom: 10px; color: #555;">
+      Payment ${index}
+    </h4>
+
+    <div class="grid">
+
+      <div class="form-field">
+        <label for="utrDate${index}">DATE</label>
+        <input id="utrDate${index}" type="date" />
       </div>
+
+      <div class="form-field">
+        <label for="utrAmount${index}">AMOUNT</label>
+        <input
+          id="utrAmount${index}"
+          type="number"
+          placeholder="AMOUNT"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="utrNo${index}">UTR NO</label>
+        <input
+          id="utrNo${index}"
+          placeholder="UTR NO"
+          data-uppercase
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="utrAcHolderName${index}">AC HOLDER NAME</label>
+        <input
+          id="utrAcHolderName${index}"
+          placeholder="AC HOLDER NAME"
+          data-uppercase
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="utrBankName${index}">BANK NAME</label>
+        <input
+          id="utrBankName${index}"
+          placeholder="BANK NAME"
+          data-uppercase
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="utrAcNo${index}">AC NO</label>
+        <input
+          id="utrAcNo${index}"
+          placeholder="AC NO"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="utrIfsc${index}">IFSC</label>
+        <input
+          id="utrIfsc${index}"
+          placeholder="IFSC"
+          data-uppercase
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="utrRemarks${index}">REMARKS</label>
+        <input
+          id="utrRemarks${index}"
+          placeholder="REMARKS"
+        />
+      </div>
+
+    </div>
+
     `;
 
   const dateInput = block.querySelector(`#utrDate${index}`);
