@@ -58,6 +58,17 @@
         .hidden {
       display: none;
     }
+    .form-field {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-field label {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
   </style>
 </head>
 <body>
@@ -102,106 +113,267 @@
       </div>
     </div>
 
-    <!-- VEHICLE -->
-    <div class="section">
-      <h3>Vehicle Information</h3>
-      <div class="grid">
-        <input id="rcNo" placeholder="RC NO *" required />
-        <input id="vehicle" placeholder="VEHICLE / VARIANT *" required />
-          <select id="osNo" required>
-          <option value="">O. S NO *</option>
-          <option>None</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
-        </select>
-        <select id="mfgMonth" required>
-          <option value="">MFG MONTH *</option>
-        </select>
-        <select id="mfgYear" required>
-          <option value="">MFG YEAR *</option>
-        </select>
-        <input id="vehicleAge" placeholder="VEHICLE AGE" readonly />
-      
-        <input id="kilometreReading" placeholder="ODOMETRE READING *" required />
-        <input id="vehicleOwnerContact" placeholder="VEHICLE VALUATION CONTACT NO *" required />
-        <input id="vehicleLocation" placeholder="VEHICLE LOCATION *" required />
-      </div>
+<div class="section">
+  <h3>Vehicle Information</h3>
+
+  <div class="grid">
+
+    <div class="form-field">
+      <label for="rcNo">RC NO *</label>
+      <input id="rcNo" placeholder="RC NO *" required />
     </div>
+
+    <div class="form-field">
+      <label for="vehicle">VEHICLE / VARIANT *</label>
+      <input id="vehicle" placeholder="VEHICLE / VARIANT *" required />
+    </div>
+
+    <div class="form-field">
+      <label for="osNo">O. S NO *</label>
+      <select id="osNo" required>
+        <option value="">O. S NO *</option>
+        <option>None</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+      </select>
+    </div>
+
+    <div class="form-field">
+      <label for="mfgMonth">MFG MONTH *</label>
+      <select id="mfgMonth" required>
+        <option value="">MFG MONTH *</option>
+      </select>
+    </div>
+
+    <div class="form-field">
+      <label for="mfgYear">MFG YEAR *</label>
+      <select id="mfgYear" required>
+        <option value="">MFG YEAR *</option>
+      </select>
+    </div>
+
+    <div class="form-field">
+      <label for="vehicleAge">VEHICLE AGE</label>
+      <input id="vehicleAge" placeholder="VEHICLE AGE" readonly />
+    </div>
+
+    <div class="form-field">
+      <label for="kilometreReading">ODOMETRE READING *</label>
+      <input id="kilometreReading" placeholder="ODOMETRE READING *" required />
+    </div>
+
+    <div class="form-field">
+      <label for="vehicleOwnerContact">VEHICLE VALUATION MOBILE NO *</label>
+      <input id="vehicleOwnerContact" placeholder="VEHICLE VALUATION CONTACT NO *" required />
+    </div>
+
+    <div class="form-field">
+      <label for="vehicleLocation">VEHICLE LOCATION *</label>
+      <input id="vehicleLocation" placeholder="VEHICLE LOCATION *" required />
+    </div>
+
+  </div>
+</div>
+
 
     <!-- LOAN -->
-    <div class="section">
-      <h3>Loan</h3>
-      <div class="grid">
-        
-        <select id="loanNature" required>
-          <option value="">TYPE *</option>
-          <option>Sale & Purchase</option><option>Refinance</option><option>BT Topup</option><option>Refinance HP</option><option>Refinance Without HP</option><option>Int BT</option>
-        </select>
-        <input id="loanAmount" type="number" placeholder="LOAN AMOUNT *" required />
-        <select id="loanTenure" required>
-          <option value="">TENURE *</option>
-        </select>
-      </div>
-      <div id="btFields" class="grid hidden">
-        <input id="prevFinanceName" placeholder="PREVIOUS FINANCE NAME *" data-bt-required="true" data-uppercase />
-        <input id="btTenure" type="number" min="1" placeholder="BT TENURE (MONTHS) *" data-bt-required="true" />
-        <select id="emiPaid" data-bt-required="true">
-          <option value="">NO OF EMI PAID *</option>
-        </select>
-        <input id="btPrincipalOs" type="number" min="0" placeholder="BT PRINCIPLE OS *" data-bt-required="true" />
+<div class="section">
+  <h3>Loan</h3>
+
+  <div class="grid">
+
+    <div class="form-field">
+      <label for="loanNature">TYPE *</label>
+      <select id="loanNature" required>
+        <option value="">TYPE *</option>
+        <option>Sale & Purchase</option>
+        <option>Refinance</option>
+        <option>BT Topup</option>
+        <option>Refinance HP</option>
+        <option>Refinance Without HP</option>
+        <option>Int BT</option>
+      </select>
+    </div>
+
+    <div class="form-field">
+      <label for="loanAmount">LOAN AMOUNT *</label>
+      <input id="loanAmount" type="number" placeholder="LOAN AMOUNT *" required />
+    </div>
+
+    <div class="form-field">
+      <label for="loanTenure">TENURE *</label>
+      <select id="loanTenure" required>
+        <option value="">TENURE *</option>
+      </select>
+    </div>
+
+  </div>
+
+  <!-- BT Fields -->
+  <div id="btFields" class="grid hidden">
+
+    <div class="form-field">
+      <label for="prevFinanceName">PREVIOUS FINANCE NAME *</label>
+      <input
+        id="prevFinanceName"
+        placeholder="PREVIOUS FINANCE NAME *"
+        data-bt-required="true"
+        data-uppercase
+      />
+    </div>
+
+    <div class="form-field">
+      <label for="btTenure">BT TENURE (MONTHS) *</label>
+      <input
+        id="btTenure"
+        type="number"
+        min="1"
+        placeholder="BT TENURE (MONTHS) *"
+        data-bt-required="true"
+      />
+    </div>
+
+    <div class="form-field">
+      <label for="emiPaid">NO OF EMI PAID *</label>
+      <select id="emiPaid" data-bt-required="true">
+        <option value="">NO OF EMI PAID *</option>
+      </select>
+    </div>
+
+    <div class="form-field">
+      <label for="btPrincipalOs">BT PRINCIPLE OS *</label>
+      <input
+        id="btPrincipalOs"
+        type="number"
+        min="0"
+        placeholder="BT PRINCIPLE OS *"
+        data-bt-required="true"
+      />
+    </div>
+
+  </div>
+</div>
+
+
+<!-- PROFILE -->
+<div class="section">
+  <h3>Applicant Profile</h3>
+
+  <div class="grid">
+
+    <div class="form-field">
+      <label for="name">NAME *</label>
+      <input id="name" placeholder="NAME *" required data-uppercase />
+    </div>
+
+    <div class="form-field">
+      <label for="gender">GENDER *</label>
+      <select id="gender" required>
+        <option value="">GENDER *</option>
+        <option>Male</option>
+        <option>Female</option>
+        <option>Rather Not To Say</option>
+        <option>None</option>
+      </select>
+    </div>
+
+    <div class="form-field">
+      <label for="pan">PAN NO *</label>
+      <input id="pan" placeholder="PAN NO *" required />
+    </div>
+
+    <!-- Mobile + Add Button -->
+    <div class="form-field">
+      <label for="mobile">MOBILE NO *</label>
+      <div class="inline-field">
+        <input id="mobile" placeholder="MOBILE NO *" required />
+        <button
+          type="button"
+          id="addAltNoBtn"
+          class="icon-btn plus-state"
+          aria-label="Add alternate number"
+        >
+          +
+        </button>
       </div>
     </div>
 
-    <!-- PROFILE -->
-    <div class="section">
-      <h3>Applicant Profile</h3>
-      <div class="grid">
-        
-        <input id="name" placeholder="NAME *" required data-uppercase />
-        <select id="gender" required>
-          <option value="">GENDER *</option>
-          <option>Male</option><option>Female</option><option>Rather Not To Say</option><otpion>none</otpion>
-        </select>
-
-        
-        <input id="pan" placeholder="PAN NO *" required />
-        <div class="inline-field">
-          <input id="mobile" placeholder="MOBILE NO *" required />
-          <button type="button" id="addAltNoBtn" class="icon-btn plus-state" aria-label="Add alternate number">+</button>
-        </div>
-        <input id="extraAltMobile" class="hidden" placeholder="ALT NO" />
-
-        <input id="email" placeholder="EMAIL ID *" required />
-        <select id="MaritalStatus" required>
-          <option value="">MARITAL STATUS *</option>
-          <option >None</option><option>Single</option><option>Married</option><option>Divorced</option>
-        </select>
-        <div id="spouseNameField" class="hidden">
-          <input id="spouseName" placeholder="SPOUSE NAME *" data-uppercase />
-        </div>
-         <input id="fatherName" placeholder="FATHER NAME *" required data-uppercase />
-        <input id="motherName" placeholder="MOTHER NAME *" required data-uppercase />
-       
-       
-      </div>
+    <div class="form-field hidden" id="extraAltMobileField">
+      <label for="extraAltMobile">ALT NO</label>
+      <input id="extraAltMobile" placeholder="ALT NO" />
     </div>
+
+    <div class="form-field">
+      <label for="email">EMAIL ID *</label>
+      <input id="email" placeholder="EMAIL ID *" required />
+    </div>
+
+    <div class="form-field">
+      <label for="MaritalStatus">MARITAL STATUS *</label>
+      <select id="MaritalStatus" required>
+        <option value="">MARITAL STATUS *</option>
+        <option>None</option>
+        <option>Single</option>
+        <option>Married</option>
+        <option>Divorced</option>
+      </select>
+    </div>
+
+    <!-- Spouse Name -->
+    <div id="spouseNameField" class="form-field hidden">
+      <label for="spouseName">SPOUSE NAME *</label>
+      <input id="spouseName" placeholder="SPOUSE NAME *" data-uppercase />
+    </div>
+
+    <div class="form-field">
+      <label for="fatherName">FATHER NAME *</label>
+      <input id="fatherName" placeholder="FATHER NAME *" required data-uppercase />
+    </div>
+
+    <div class="form-field">
+      <label for="motherName">MOTHER NAME *</label>
+      <input id="motherName" placeholder="MOTHER NAME *" required data-uppercase />
+    </div>
+
+  </div>
+</div>
+
 
     <!-- CIBIL SNAPSHOT -->
     <div class="section cibil-section">
       <div class="section-header">
         <h3>CIBIL DETAILS</h3>
-        <button type="button" id="cibilToggleBtn" class="icon-btn plus-state compact" aria-expanded="false" aria-controls="cibilDetails">+</button>
+        <button
+          type="button"
+          id="cibilToggleBtn"
+          class="icon-btn plus-state compact"
+          aria-expanded="false"
+          aria-controls="cibilDetails"
+        >
+          +
+        </button>
       </div>
+
       <div id="cibilDetails" class="grid hidden">
-        <div>
-          <label>CIBIL Score</label>
+
+        <div class="form-field">
+          <label>CIBIL SCORE</label>
           <div id="cibilDisplay" class="cibil-display">Not Entered</div>
           <input type="hidden" id="cibilScore" />
         </div>
-        <div>
-          <label>Update Score</label>
-          <button type="button" id="cibilPromptBtn" class="ghost-btn" style="width: 100%;">Click Here</button>
+
+        <div class="form-field">
+          <label>UPDATE SCORE</label>
+          <button
+            type="button"
+            id="cibilPromptBtn"
+            class="ghost-btn"
+            style="width: 100%;"
+          >
+            Click Here
+          </button>
         </div>
-        <div>
-          <label>Indicator</label>
+
+        <div class="form-field">
+          <label>INDICATOR</label>
           <div class="cibil-color-options">
             <button type="button" class="cibil-color-btn" data-color="red" aria-label="Mark CIBIL Red"></button>
             <button type="button" class="cibil-color-btn" data-color="yellow" aria-label="Mark CIBIL Yellow"></button>
@@ -209,111 +381,290 @@
           </div>
           <input type="hidden" id="cibilIndicator" />
         </div>
+
       </div>
     </div>
 
-    <!-- CURRENT ADDRESS -->
-    <div class="section">
-      <h3>Current Address</h3>
-      <div class="grid">
-        <select id="currentAddressProof" required>
-          <option value="">ADDRESS PROOF *</option>
-          <option>Aadhaar</option><option>Voter ID</option><option>Gas Bill</option><option>EB Bill</option><option>Tax Paid Receipt</option><option>Rent Agreements</option>
-        </select>
-        <input id="currentLandmark" placeholder="LAND MARK *" required />
-        <input id="currentPincode" placeholder="PIN CODE *" required />
-        <input id="currentDistrict" placeholder="DISTRICT *" required />
-                <select id="currentPinDropdown" class="hidden">
-          <option value="">Select PIN Code</option>
-        </select>
-        <select id="currentOhpRelation" required>
-          <option value="">OHP OWNER RELATION *</option>
-          <option>SPOUSE</option><option>SELF-OWNED</option><option>PARANTEL</option><option>RENTED</option>
-        </select>
-      </div>
+
+<!-- CURRENT ADDRESS -->
+<div class="section">
+  <h3>Current Address</h3>
+
+  <div class="grid">
+
+    <div class="form-field">
+      <label for="currentAddressProof">ADDRESS PROOF *</label>
+      <select id="currentAddressProof" required>
+        <option value="">ADDRESS PROOF *</option>
+        <option>Aadhaar</option>
+        <option>Voter ID</option>
+        <option>Gas Bill</option>
+        <option>EB Bill</option>
+        <option>Tax Paid Receipt</option>
+        <option>Rent Agreements</option>
+      </select>
     </div>
 
-    <!-- PERMANENT ADDRESS -->
-    <div class="section">
-      <div class="section-header">
-        <h3>Permanent Address</h3>
-        <label style="display:flex;align-items:center;gap:8px;font-weight:500;">
-          <input type="checkbox" id="copyPermanentFromCurrent" />
-        </label>
-      </div>
-      <div class="grid">
-        <select id="permanentAddressProof" required>
-          <option value="">ADDRESS PROOF *</option>
-          <option>Aadhaar</option><option>Voter ID</option><option>Gas Bill</option><option>EB Bill</option><option>Tax Paid Receipt</option><option>Rent Agreements</option>
-        </select>
-        <input id="permanentLandmark" placeholder="LAND MARK *" required />
-        <input id="permanentPincode" placeholder="PIN CODE *" required />
-        <input id="permanentDistrict" placeholder="DISTRICT *" required />
-        
-        <select id="permanentPinDropdown" class="hidden">
-          <option value="">Select PIN</option>
-        </select>
-        <select id="permanentOhpRelation" required>
-          <option value="">OHP OWNER RELATION *</option>
-          <option>SPOUSE</option><option>SELF-OWNED</option><option>PARANTEL</option><option>RENTED</option>
-        </select>
-      </div>
+    <div class="form-field">
+      <label for="currentLandmark">LAND MARK *</label>
+      <input id="currentLandmark" placeholder="LAND MARK *" required />
     </div>
 
-    <!-- EMPLOYMENT & OFFICE -->
-    <div class="section">
-      <h3>Employment & Office</h3>
-      <div class="grid">
-        <select id="employmentCustomerProfile" required>
-          <option value="">CUSTOMER PROFILE *</option>
-          <option>Self-Employed</option><option>Salaried</option><option>ITR</option><option>Agriculture</option><option>Pension</option>
-        </select>
-        <input id="businessName" placeholder="BUSINESS / OFFICE / DESIGNATION NAME *" required />
-        <input id="monthlyIncome" type="number" placeholder="MONTHLY INCOME *" required />
-        <select id="businessProof" required>
-          <option value="">BUSINESS PROOF *</option>
-          <option>NIP</option><option>Pay slips</option><option>RTC</option><option>GST</option><option>ITR</option><option>License</option><option>Pension Statements</option>
-        </select>
-        </select>
-        <textarea id="officeFullAddress" placeholder="FULL ADDRESS *" required></textarea>
-      </div>
+    <div class="form-field">
+      <label for="currentPincode">PIN CODE *</label>
+      <input id="currentPincode" placeholder="PIN CODE *" required />
     </div>
 
-    <!-- REF CONTACT -->
-    <div class="section">
-      <h3>Ref Contact</h3>
-      <div class="grid" style="grid-template-columns: repeat(2, 1fr);">
-        <input id="refMob1" placeholder="MOBILE NO  *" required />
-        <input id="refName1" placeholder="NAME  *" required data-uppercase />
-        <input id="refMob2" placeholder="MOBILE NO  *" />
-        <input id="refName2" placeholder="NAME  *" data-uppercase />
-      </div>
+    <div class="form-field">
+      <label for="currentDistrict">DISTRICT *</label>
+      <input id="currentDistrict" placeholder="DISTRICT *" required />
     </div>
 
-    <!-- ADDITIONAL APPLICANTS -->
-    <div class="section" id="additionalApplicantsSection">
-      <div class="section-header">
-        <h3>Additional Applicants</h3>
-        <button type="button" id="addAdditionalApplicantBtn" class="icon-btn plus-state compact">+ Add Applicant</button>
-      </div>
-      <p class="helper-text">
-        Use this to capture Co-Applicant / Guarantor information. Each additional applicant includes profile, address, employment, and reference details.
-      </p>
-      <div id="additionalApplicantsContainer" class="additional-applicants"></div>
+    <div class="form-field hidden">
+      <label for="currentPinDropdown">SELECT PIN CODE</label>
+      <select id="currentPinDropdown">
+        <option value="">Select PIN Code</option>
+      </select>
     </div>
 
-    <!-- NOMINEE -->
-    <div class="section">
-      <h3>Nominee Information</h3>
-      <div class="grid">
-        <input id="nomineeName" placeholder="NOMINEE NAME *" required data-uppercase />
-        <input id="nomineeDob" type="date" placeholder="NOMINEE DATE OF BIRTH *" required />
-        <select id="nomineeRelationship" required>
-          <option value="">RELATIONSHIP *</option>
-          <option>None</option><option>Spouse</option><option>Father</option><option>Mother</option><option>Brother</option><option>Sister</option><option>Son</option><option>Daughter</option><option>Grand Father</option><option>Grand Mother</option>
-        </select>
-      </div>
+    <div class="form-field">
+      <label for="currentOhpRelation">OHP OWNER RELATION *</label>
+      <select id="currentOhpRelation" required>
+        <option value="">OHP OWNER RELATION *</option>
+        <option>SPOUSE</option>
+        <option>SELF-OWNED</option>
+        <option>PARANTEL</option>
+        <option>RENTED</option>
+      </select>
     </div>
+
+  </div>
+</div>
+
+<!-- PERMANENT ADDRESS -->
+<div class="section">
+  <div class="section-header">
+    <h3>Permanent Address</h3>
+
+    <label style="display:flex;align-items:center;gap:8px;font-weight:500;">
+      <input type="checkbox" id="copyPermanentFromCurrent" />
+      Same as Current Address
+    </label>
+  </div>
+
+  <div class="grid">
+
+    <div class="form-field">
+      <label for="permanentAddressProof">ADDRESS PROOF *</label>
+      <select id="permanentAddressProof" required>
+        <option value="">ADDRESS PROOF *</option>
+        <option>Aadhaar</option>
+        <option>Voter ID</option>
+        <option>Gas Bill</option>
+        <option>EB Bill</option>
+        <option>Tax Paid Receipt</option>
+        <option>Rent Agreements</option>
+      </select>
+    </div>
+
+    <div class="form-field">
+      <label for="permanentLandmark">LAND MARK *</label>
+      <input id="permanentLandmark" placeholder="LAND MARK *" required />
+    </div>
+
+    <div class="form-field">
+      <label for="permanentPincode">PIN CODE *</label>
+      <input id="permanentPincode" placeholder="PIN CODE *" required />
+    </div>
+
+    <div class="form-field">
+      <label for="permanentDistrict">DISTRICT *</label>
+      <input id="permanentDistrict" placeholder="DISTRICT *" required />
+    </div>
+
+    <div class="form-field hidden">
+      <label for="permanentPinDropdown">SELECT PIN</label>
+      <select id="permanentPinDropdown">
+        <option value="">Select PIN</option>
+      </select>
+    </div>
+
+    <div class="form-field">
+      <label for="permanentOhpRelation">OHP OWNER RELATION *</label>
+      <select id="permanentOhpRelation" required>
+        <option value="">OHP OWNER RELATION *</option>
+        <option>SPOUSE</option>
+        <option>SELF-OWNED</option>
+        <option>PARANTEL</option>
+        <option>RENTED</option>
+      </select>
+    </div>
+
+  </div>
+</div>
+
+<!-- EMPLOYMENT & OFFICE -->
+<div class="section">
+  <h3>Employment & Office</h3>
+
+  <div class="grid">
+
+    <div class="form-field">
+      <label for="employmentCustomerProfile">CUSTOMER PROFILE *</label>
+      <select id="employmentCustomerProfile" required>
+        <option value="">CUSTOMER PROFILE *</option>
+        <option>Self-Employed</option>
+        <option>Salaried</option>
+        <option>ITR</option>
+        <option>Agriculture</option>
+        <option>Pension</option>
+      </select>
+    </div>
+
+    <div class="form-field">
+      <label for="businessName">BUSINESS / OFFICE / DESIGNATION NAME *</label>
+      <input
+        id="businessName"
+        placeholder="BUSINESS / OFFICE / DESIGNATION NAME *"
+        required
+      />
+    </div>
+
+    <div class="form-field">
+      <label for="monthlyIncome">MONTHLY INCOME *</label>
+      <input
+        id="monthlyIncome"
+        type="number"
+        placeholder="MONTHLY INCOME *"
+        required
+      />
+    </div>
+
+    <div class="form-field">
+      <label for="businessProof">BUSINESS PROOF *</label>
+      <select id="businessProof" required>
+        <option value="">BUSINESS PROOF *</option>
+        <option>NIP</option>
+        <option>Pay slips</option>
+        <option>RTC</option>
+        <option>GST</option>
+        <option>ITR</option>
+        <option>License</option>
+        <option>Pension Statements</option>
+      </select>
+    </div>
+
+    <div class="form-field" style="grid-column: span 3;">
+      <label for="officeFullAddress">FULL ADDRESS *</label>
+      <textarea
+        id="officeFullAddress"
+        placeholder="FULL ADDRESS *"
+        required
+      ></textarea>
+    </div>
+
+  </div>
+</div>
+
+<!-- REF CONTACT -->
+<div class="section">
+  <h3>Ref Contact</h3>
+
+  <div class="grid" style="grid-template-columns: repeat(2, 1fr);">
+
+    <div class="form-field">
+      <label for="refMob1">MOBILE NO *</label>
+      <input id="refMob1" placeholder="MOBILE NO *" required />
+    </div>
+
+    <div class="form-field">
+      <label for="refName1">NAME *</label>
+      <input id="refName1" placeholder="NAME *" required data-uppercase />
+    </div>
+
+    <div class="form-field">
+      <label for="refMob2">MOBILE NO</label>
+      <input id="refMob2" placeholder="MOBILE NO" />
+    </div>
+
+    <div class="form-field">
+      <label for="refName2">NAME</label>
+      <input id="refName2" placeholder="NAME" data-uppercase />
+    </div>
+
+  </div>
+</div>
+<!-- ADDITIONAL APPLICANTS -->
+<div class="section" id="additionalApplicantsSection">
+  <div class="section-header">
+    <h3>Additional Applicants</h3>
+    <button
+      type="button"
+      id="addAdditionalApplicantBtn"
+      class="icon-btn plus-state compact"
+    >
+      + Add Applicant
+    </button>
+  </div>
+
+  <p class="helper-text">
+    Use this to capture Co-Applicant / Guarantor information.
+    Each additional applicant includes profile, address,
+    employment, and reference details.
+  </p>
+
+  <div
+    id="additionalApplicantsContainer"
+    class="additional-applicants"
+  ></div>
+</div>
+
+<!-- NOMINEE -->
+<div class="section">
+  <h3>Nominee Information</h3>
+
+  <div class="grid">
+
+    <div class="form-field">
+      <label for="nomineeName">NOMINEE NAME *</label>
+      <input
+        id="nomineeName"
+        placeholder="NOMINEE NAME *"
+        required
+        data-uppercase
+      />
+    </div>
+
+    <div class="form-field">
+      <label for="nomineeDob">NOMINEE DATE OF BIRTH *</label>
+      <input
+        id="nomineeDob"
+        type="date"
+        placeholder="NOMINEE DATE OF BIRTH *"
+        required
+      />
+    </div>
+
+    <div class="form-field">
+      <label for="nomineeRelationship">RELATIONSHIP *</label>
+      <select id="nomineeRelationship" required>
+        <option value="">RELATIONSHIP *</option>
+        <option>None</option>
+        <option>Spouse</option>
+        <option>Father</option>
+        <option>Mother</option>
+        <option>Brother</option>
+        <option>Sister</option>
+        <option>Son</option>
+        <option>Daughter</option>
+        <option>Grand Father</option>
+        <option>Grand Mother</option>
+      </select>
+    </div>
+
+  </div>
+</div>
+
 
     <!-- BANK / FINANCE -->
     <div class="section">
@@ -509,6 +860,8 @@
   </form>
 </main>
 </div>
+
+
 
 <script src="/js/used-car-loan.js"></script>
 </body>
