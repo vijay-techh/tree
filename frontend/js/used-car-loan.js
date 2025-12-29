@@ -761,6 +761,29 @@ document.getElementById("leadForm").addEventListener("submit", async (e) => {
 
   leadData.loanType = "Used Car Loan";
 
+
+
+  
+    // Optional Additional Applicants
+  leadData.additionalApplicants = [];
+
+  document.querySelectorAll(".additional-applicant-block").forEach(block => {
+    const applicant = {};
+    let hasData = false;
+
+    block.querySelectorAll("input, select, textarea").forEach(el => {
+      if (!el.id) return;
+      if (el.value && el.value.trim() !== "") {
+        applicant[el.id] = el.value;
+        hasData = true;
+      }
+    });
+
+    if (hasData) {
+      leadData.additionalApplicants.push(applicant);
+    }
+  });
+
   const res = await fetch("/api/leads", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
