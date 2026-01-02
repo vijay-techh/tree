@@ -378,7 +378,7 @@ function createAdditionalApplicantBlock(index) {
 
         <div class="form-field">
           <label for="additionalApplicant${index}Name">NAME *</label>
-          <input id="additionalApplicant${index}Name" placeholder="NAME *" data-uppercase data-alphabets />
+          <input id="additionalApplicant${index}Name" data-uppercase data-alphabets />
         </div>
 
         <div class="form-field">
@@ -393,17 +393,17 @@ function createAdditionalApplicantBlock(index) {
 
         <div class="form-field">
           <label for="additionalApplicant${index}Pan">PAN NO</label>
-          <input id="additionalApplicant${index}Pan" placeholder="PAN NO" data-uppercase maxlength="10" />
+          <input id="additionalApplicant${index}Pan" data-uppercase maxlength="10" />
         </div>
 
         <div class="form-field">
           <label for="additionalApplicant${index}Mobile">MOBILE NO</label>
-          <input id="additionalApplicant${index}Mobile" placeholder="MOBILE NO" data-numbers maxlength="10" />
+          <input id="additionalApplicant${index}Mobile" data-numbers maxlength="10" />
         </div>
 
         <div class="form-field">
           <label for="additionalApplicant${index}Email">EMAIL ID</label>
-          <input id="additionalApplicant${index}Email" type="email" placeholder="EMAIL ID" />
+          <input id="additionalApplicant${index}Email" type="email" />
         </div>
 
         <div class="form-field">
@@ -418,12 +418,12 @@ function createAdditionalApplicantBlock(index) {
 
         <div class="form-field">
           <label for="additionalApplicant${index}FatherName">FATHER NAME</label>
-          <input id="additionalApplicant${index}FatherName" placeholder="FATHER NAME" data-uppercase data-alphabets />
+          <input id="additionalApplicant${index}FatherName" data-uppercase data-alphabets />
         </div>
 
         <div class="form-field">
           <label for="additionalApplicant${index}MotherName">MOTHER NAME</label>
-          <input id="additionalApplicant${index}MotherName" placeholder="MOTHER NAME" data-uppercase data-alphabets />
+          <input id="additionalApplicant${index}MotherName" data-uppercase data-alphabets />
         </div>
 
       </div>
@@ -451,7 +451,6 @@ function createAdditionalApplicantBlock(index) {
       <label for="additionalApplicant${index}CurrentLandmark">LAND MARK</label>
       <input
         id="additionalApplicant${index}CurrentLandmark"
-        placeholder="LAND MARK"
         data-uppercase
       />
     </div>
@@ -460,7 +459,6 @@ function createAdditionalApplicantBlock(index) {
       <label for="additionalApplicant${index}CurrentPincode">PIN CODE</label>
       <input
         id="additionalApplicant${index}CurrentPincode"
-        placeholder="PIN CODE"
         data-numbers
         maxlength="6"
       />
@@ -470,7 +468,6 @@ function createAdditionalApplicantBlock(index) {
       <label for="additionalApplicant${index}CurrentDistrict">DISTRICT</label>
       <input
         id="additionalApplicant${index}CurrentDistrict"
-        placeholder="DISTRICT"
         data-uppercase
         data-alphabets
       />
@@ -519,7 +516,6 @@ function createAdditionalApplicantBlock(index) {
       <label for="additionalApplicant${index}PermanentLandmark">LAND MARK</label>
       <input
         id="additionalApplicant${index}PermanentLandmark"
-        placeholder="LAND MARK"
         data-uppercase
       />
     </div>
@@ -528,7 +524,6 @@ function createAdditionalApplicantBlock(index) {
       <label for="additionalApplicant${index}PermanentPincode">PIN CODE</label>
       <input
         id="additionalApplicant${index}PermanentPincode"
-        placeholder="PIN CODE"
         data-numbers
         maxlength="6"
       />
@@ -538,7 +533,6 @@ function createAdditionalApplicantBlock(index) {
       <label for="additionalApplicant${index}PermanentDistrict">DISTRICT</label>
       <input
         id="additionalApplicant${index}PermanentDistrict"
-        placeholder="DISTRICT"
         data-uppercase
         data-alphabets
       />
@@ -591,7 +585,6 @@ function createAdditionalApplicantBlock(index) {
           </label>
           <input
             id="additionalApplicant${index}BusinessName"
-            placeholder="BUSINESS / OFFICE / DESIGNATION NAME"
             data-uppercase
           />
         </div>
@@ -603,7 +596,6 @@ function createAdditionalApplicantBlock(index) {
           <input
             id="additionalApplicant${index}MonthlyIncome"
             type="number"
-            placeholder="MONTHLY INCOME"
           />
         </div>
 
@@ -629,7 +621,6 @@ function createAdditionalApplicantBlock(index) {
       </label>
       <textarea
         id="additionalApplicant${index}OfficeAddress"
-        placeholder="FULL ADDRESS"
       ></textarea>
     </div>
 
@@ -931,7 +922,6 @@ function createPaymentBlock(index) {
         <input
           id="utrAmount${index}"
           type="number"
-          placeholder="AMOUNT"
         />
       </div>
 
@@ -939,7 +929,6 @@ function createPaymentBlock(index) {
         <label for="utrNo${index}">UTR NO</label>
         <input
           id="utrNo${index}"
-          placeholder="UTR NO"
           data-uppercase
         />
       </div>
@@ -948,7 +937,6 @@ function createPaymentBlock(index) {
         <label for="utrAcHolderName${index}">AC HOLDER NAME</label>
         <input
           id="utrAcHolderName${index}"
-          placeholder="AC HOLDER NAME"
           data-uppercase
           data-alphabets
         />
@@ -958,7 +946,6 @@ function createPaymentBlock(index) {
         <label for="utrBankName${index}">BANK NAME</label>
         <input
           id="utrBankName${index}"
-          placeholder="BANK NAME"
           data-uppercase
           data-alphabets
         />
@@ -968,7 +955,6 @@ function createPaymentBlock(index) {
         <label for="utrAcNo${index}">AC NO</label>
         <input
           id="utrAcNo${index}"
-          placeholder="AC NO"
           data-numbers
         />
       </div>
@@ -977,7 +963,6 @@ function createPaymentBlock(index) {
         <label for="utrIfsc${index}">IFSC</label>
         <input
           id="utrIfsc${index}"
-          placeholder="IFSC"
           data-uppercase
         />
       </div>
@@ -986,7 +971,6 @@ function createPaymentBlock(index) {
         <label for="utrRemarks${index}">REMARKS</label>
         <input
           id="utrRemarks${index}"
-          placeholder="REMARKS"
         />
       </div>
 
