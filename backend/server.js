@@ -49,9 +49,11 @@ function generateLoanId() {
 /* CREATE LEAD (ALL LOANS) */
 app.post("/api/leads", async (req, res) => {
   try {
-const loanId = generateLoanId();
+    // Use loanId from frontend if provided, otherwise generate one
+    const loanId = req.body.loanId || generateLoanId();
 
     console.log("INSERT DATA:", loanId, req.body.loanType);
+    console.log("Received loanId from frontend:", req.body.loanId);
 
     await pool.query(
       `INSERT INTO leads (loan_id, loan_type, stage, data)

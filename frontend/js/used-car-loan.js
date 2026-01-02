@@ -1132,9 +1132,17 @@ document.getElementById("leadForm").addEventListener("submit", async (e) => {
   }
 
   const leadData = {};
+  
+  // Explicitly capture loanId first to ensure it's sent correctly
+  const loanIdField = document.getElementById('loanId');
+  if (loanIdField && loanIdField.value) {
+    leadData.loanId = String(loanIdField.value).trim();
+  }
+  
   document.querySelectorAll("input, select, textarea").forEach(el => {
     // For the hidden RTO Docs input, we ensure we get the value
-    if (el.type !== 'submit' && el.id) {
+    // Skip loanId as we've already captured it explicitly above
+    if (el.type !== 'submit' && el.id && el.id !== 'loanId') {
        leadData[el.id] = el.value;
     }
   });
@@ -1202,6 +1210,7 @@ document.querySelectorAll(".payment-block").forEach(block => {
 
 // 🔍 Optional but recommended (debug once)
 console.log("FINAL SUBMIT DATA", leadData);
+console.log("Loan ID being sent:", leadData.loanId);
 
   const res = await fetch("/api/leads", {
     method: "POST",
