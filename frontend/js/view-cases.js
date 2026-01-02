@@ -44,11 +44,18 @@ function formatDate(ts) {
   return d.toLocaleString();
 }
 
+function highlightText(text, searchTerm) {
+  if (!searchTerm) return text;
+  const regex = new RegExp(`(${searchTerm})`, 'gi');
+  return text.replace(regex, '<mark>$1</mark>');
+}
+
 function renderTable() {
   if (!tbody) return;
   const rowsPerPage = Number(rowsPerPageSelect.value) || 10;
   const start = (currentPage - 1) * rowsPerPage;
   const paged = filteredLeads.slice(start, start + rowsPerPage);
+  const searchTerm = (searchInput.value || '').trim();
 
   tbody.innerHTML = "";
   if (paged.length === 0) {
@@ -59,13 +66,22 @@ function renderTable() {
 
   paged.forEach(lead => {
     const tr = document.createElement('tr');
+    
+    // Apply highlighting to key fields
+    const loanId = highlightText(lead.loan_id || '-', searchTerm);
+    const name = highlightText(lead.data?.name || '-', searchTerm);
+    const mobile = highlightText(lead.data?.mobile || '-', searchTerm);
+    const loanAmount = highlightText(lead.data?.loanAmount || '-', searchTerm);
+    const bankFinance = highlightText(lead.data?.bankFinance || lead.data?.loanDsa || '-', searchTerm);
+    const loanStage = highlightText(lead.data?.loanStage || '-', searchTerm);
+    
     tr.innerHTML = `
-      <td>${lead.loan_id}</td>
-      <td>${lead.data?.name || '-'}</td>
-      <td>${lead.data?.mobile || '-'}</td>
-      <td>${lead.data?.loanAmount || '-'}</td>
-      <td>${lead.data?.bankFinance || lead.data?.loanDsa || '-'}</td>
-      <td>${lead.data?.loanStage || '-'}</td>
+      <td>${loanId}</td>
+      <td>${name}</td>
+      <td>${mobile}</td>
+      <td>${loanAmount}</td>
+      <td>${bankFinance}</td>
+      <td>${loanStage}</td>
       <td>${formatDate(lead.updatedAt || lead.createdAt)}</td>
       <td class="actions">
         <a href="/used-car-loan.html?loanId=${lead.loan_id}">Edit</a>
@@ -78,7 +94,7 @@ function renderTable() {
   renderPagination(rowsPerPage);
   attachRowHandlers();
 
-  // clicking a table row (outside actions) should open the edit form
+  // clicking a table row (outside actions) should open edit form
   tbody.querySelectorAll('tr').forEach(row => {
     row.addEventListener('click', (e) => {
       if (e.target.closest('.actions')) return; // ignore clicks inside actions cell
@@ -129,12 +145,92 @@ function renderPagination(rowsPerPage) {
 function applyFilters() {
   const q = (searchInput.value || '').trim().toLowerCase();
   const stage = filterStage.value;
+  
   filteredLeads = allLeads.filter(l => {
-    const text = `${l.loan_id} ${l.data?.name || ''} ${l.data?.mobile || ''}`.toLowerCase();
-    if (q && !text.includes(q)) return false;
+    // Create searchable text from multiple fields
+    const searchableText = [
+      l.loan_id || '',
+      l.data?.name || '',
+      l.data?.mobile || '',
+      l.data?.email || '',
+      l.data?.pan || '',
+      l.data?.loanAmount || '',
+      l.data?.bankFinance || '',
+      l.data?.loanDsa || '',
+      l.data?.loanStage || '',
+      l.data?.caseDealer || '',
+      l.data?.vehicle || '',
+      l.data?.rcNo || '',
+      l.data?.basicRefNameMobile || ''
+    ].join(' ').toLowerCase();
+    
+    // Stage filter
     if (stage && l.data?.loanStage !== stage) return false;
+    
+    // Search filter - comprehensive partial matching
+    if (q) {
+      // Split search query into multiple terms for better matching
+      const searchTerms = q.split(' ').filter(term => term.length > 0);
+      
+      // Check if ALL search terms are found in any field
+      const allTermsMatch = searchTerms.every(term => {
+        return searchableText.includes(term);
+      });
+      
+      if (!allTermsMatch) return false;
+    }
+    
     return true;
   });
+  
+  // Sort results: exact matches first, then partial matches
+  if (q) {
+    filteredLeads.sort((a, b) => {
+      const aText = [
+        a.loan_id || '',
+        a.data?.name || '',
+        a.data?.mobile || ''
+      ].join(' ').toLowerCase();
+      
+      const bText = [
+        b.loan_id || '',
+        b.data?.name || '',
+        b.data?.mobile || ''
+      ].join(' ').toLowerCase();
+      
+      // Exact match priority
+      const aExact = aText.includes(q);
+      const bExact = bText.includes(q);
+      
+      if (aExact && !bExact) return -1;
+      if (!aExact && bExact) return 1;
+      
+      // Loan ID exact match gets highest priority
+      const aLoanExact = a.loan_id?.toLowerCase() === q;
+      const bLoanExact = b.loan_id?.toLowerCase() === q;
+      
+      if (aLoanExact && !bLoanExact) return -1;
+      if (!aLoanExact && bLoanExact) return 1;
+      
+      // Name exact match
+      const aNameExact = a.data?.name?.toLowerCase() === q;
+      const bNameExact = b.data?.name?.toLowerCase() === q;
+      
+      if (aNameExact && !bNameExact) return -1;
+      if (!aNameExact && bNameExact) return 1;
+      
+      // Mobile exact match
+      const aMobileExact = a.data?.mobile === q;
+      const bMobileExact = b.data?.mobile === q;
+      
+      if (aMobileExact && !bMobileExact) return -1;
+      if (!aMobileExact && bMobileExact) return 1;
+      
+      // Alphabetical sort as fallback
+      return aText.localeCompare(bText);
+    });
+  }
+  
   currentPage = 1;
   renderTable();
 }
