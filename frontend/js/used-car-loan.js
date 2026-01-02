@@ -1,5 +1,63 @@
 console.log("Used Car Loan JS loaded");
 
+/* =========================
+   INPUT VALIDATION & UPPERCASE
+========================= */
+
+// Enforce uppercase for inputs with data-uppercase attribute
+function enforceUppercase() {
+  const uppercaseInputs = document.querySelectorAll("[data-uppercase]");
+  uppercaseInputs.forEach((input) => {
+    const toUpper = () => {
+      input.value = input.value.toUpperCase();
+    };
+    input.addEventListener("input", toUpper);
+    input.addEventListener("blur", toUpper);
+    toUpper();
+  });
+}
+
+// Restrict to alphabets only (with spaces) for name fields
+function enforceAlphabetsOnly() {
+  const alphabetInputs = document.querySelectorAll("[data-alphabets]");
+  alphabetInputs.forEach((input) => {
+    input.addEventListener("input", (e) => {
+      // Allow only letters, spaces, and common name characters
+      e.target.value = e.target.value.replace(/[^A-Za-z\s\.\-]/g, "");
+    });
+    input.addEventListener("keypress", (e) => {
+      // Prevent non-alphabetic characters (except space, period, hyphen)
+      const char = String.fromCharCode(e.which);
+      if (!/[A-Za-z\s\.\-]/.test(char)) {
+        e.preventDefault();
+      }
+    });
+  });
+}
+
+// Restrict to numbers only for numeric fields
+function enforceNumbersOnly() {
+  const numberInputs = document.querySelectorAll("[data-numbers]");
+  numberInputs.forEach((input) => {
+    input.addEventListener("input", (e) => {
+      // Remove any non-numeric characters
+      e.target.value = e.target.value.replace(/[^0-9]/g, "");
+    });
+    input.addEventListener("keypress", (e) => {
+      // Allow only digits
+      const char = String.fromCharCode(e.which);
+      if (!/[0-9]/.test(char)) {
+        e.preventDefault();
+      }
+    });
+  });
+}
+
+// Initialize all validations
+enforceUppercase();
+enforceAlphabetsOnly();
+enforceNumbersOnly();
+
 // Auto values
 document.getElementById("dateTime").value = new Date().toLocaleString();
 
@@ -320,7 +378,7 @@ function createAdditionalApplicantBlock(index) {
 
         <div class="form-field">
           <label for="additionalApplicant${index}Name">NAME *</label>
-          <input id="additionalApplicant${index}Name" placeholder="NAME *" data-uppercase />
+          <input id="additionalApplicant${index}Name" placeholder="NAME *" data-uppercase data-alphabets />
         </div>
 
         <div class="form-field">
@@ -335,12 +393,12 @@ function createAdditionalApplicantBlock(index) {
 
         <div class="form-field">
           <label for="additionalApplicant${index}Pan">PAN NO</label>
-          <input id="additionalApplicant${index}Pan" placeholder="PAN NO" />
+          <input id="additionalApplicant${index}Pan" placeholder="PAN NO" data-uppercase maxlength="10" />
         </div>
 
         <div class="form-field">
           <label for="additionalApplicant${index}Mobile">MOBILE NO</label>
-          <input id="additionalApplicant${index}Mobile" placeholder="MOBILE NO" />
+          <input id="additionalApplicant${index}Mobile" placeholder="MOBILE NO" data-numbers maxlength="10" />
         </div>
 
         <div class="form-field">
@@ -360,12 +418,12 @@ function createAdditionalApplicantBlock(index) {
 
         <div class="form-field">
           <label for="additionalApplicant${index}FatherName">FATHER NAME</label>
-          <input id="additionalApplicant${index}FatherName" placeholder="FATHER NAME" data-uppercase />
+          <input id="additionalApplicant${index}FatherName" placeholder="FATHER NAME" data-uppercase data-alphabets />
         </div>
 
         <div class="form-field">
           <label for="additionalApplicant${index}MotherName">MOTHER NAME</label>
-          <input id="additionalApplicant${index}MotherName" placeholder="MOTHER NAME" data-uppercase />
+          <input id="additionalApplicant${index}MotherName" placeholder="MOTHER NAME" data-uppercase data-alphabets />
         </div>
 
       </div>
@@ -394,6 +452,7 @@ function createAdditionalApplicantBlock(index) {
       <input
         id="additionalApplicant${index}CurrentLandmark"
         placeholder="LAND MARK"
+        data-uppercase
       />
     </div>
 
@@ -402,6 +461,8 @@ function createAdditionalApplicantBlock(index) {
       <input
         id="additionalApplicant${index}CurrentPincode"
         placeholder="PIN CODE"
+        data-numbers
+        maxlength="6"
       />
     </div>
 
@@ -410,6 +471,8 @@ function createAdditionalApplicantBlock(index) {
       <input
         id="additionalApplicant${index}CurrentDistrict"
         placeholder="DISTRICT"
+        data-uppercase
+        data-alphabets
       />
     </div>
 
@@ -457,6 +520,7 @@ function createAdditionalApplicantBlock(index) {
       <input
         id="additionalApplicant${index}PermanentLandmark"
         placeholder="LAND MARK"
+        data-uppercase
       />
     </div>
 
@@ -465,6 +529,8 @@ function createAdditionalApplicantBlock(index) {
       <input
         id="additionalApplicant${index}PermanentPincode"
         placeholder="PIN CODE"
+        data-numbers
+        maxlength="6"
       />
     </div>
 
@@ -473,6 +539,8 @@ function createAdditionalApplicantBlock(index) {
       <input
         id="additionalApplicant${index}PermanentDistrict"
         placeholder="DISTRICT"
+        data-uppercase
+        data-alphabets
       />
     </div>
 
@@ -517,26 +585,27 @@ function createAdditionalApplicantBlock(index) {
       </select>
     </div>
 
-    <div class="form-field">
-      <label for="additionalApplicant${index}BusinessName">
-        BUSINESS / OFFICE / DESIGNATION NAME
-      </label>
-      <input
-        id="additionalApplicant${index}BusinessName"
-        placeholder="BUSINESS / OFFICE / DESIGNATION NAME"
-      />
-    </div>
+        <div class="form-field">
+          <label for="additionalApplicant${index}BusinessName">
+            BUSINESS / OFFICE / DESIGNATION NAME
+          </label>
+          <input
+            id="additionalApplicant${index}BusinessName"
+            placeholder="BUSINESS / OFFICE / DESIGNATION NAME"
+            data-uppercase
+          />
+        </div>
 
-    <div class="form-field">
-      <label for="additionalApplicant${index}MonthlyIncome">
-        MONTHLY INCOME
-      </label>
-      <input
-        id="additionalApplicant${index}MonthlyIncome"
-        type="number"
-        placeholder="MONTHLY INCOME"
-      />
-    </div>
+        <div class="form-field">
+          <label for="additionalApplicant${index}MonthlyIncome">
+            MONTHLY INCOME
+          </label>
+          <input
+            id="additionalApplicant${index}MonthlyIncome"
+            type="number"
+            placeholder="MONTHLY INCOME"
+          />
+        </div>
 
     <div class="form-field">
       <label for="additionalApplicant${index}BusinessProof">
@@ -626,6 +695,11 @@ function initializeAdditionalApplicants() {
     const block = createAdditionalApplicantBlock(visibleIndex);
     additionalApplicantsContainer.appendChild(block);
     initAdditionalApplicantPin(visibleIndex);
+
+    // Re-apply validation to dynamically created fields
+    enforceUppercase();
+    enforceAlphabetsOnly();
+    enforceNumbersOnly();
 
     // Setup remove button behavior (enabled only when block is empty)
     if (typeof setupRemoveButtonBehavior === 'function') setupRemoveButtonBehavior(block);
@@ -811,6 +885,12 @@ if (addPaymentBtn && removePaymentBtn && paymentContainer) {
     paymentCount++;
     const newBlock = createPaymentBlock(paymentCount);
     paymentContainer.appendChild(newBlock);
+    
+    // Re-apply validation to dynamically created fields
+    enforceUppercase();
+    enforceAlphabetsOnly();
+    enforceNumbersOnly();
+    
     updatePaymentButtons();
   });
   
@@ -870,6 +950,7 @@ function createPaymentBlock(index) {
           id="utrAcHolderName${index}"
           placeholder="AC HOLDER NAME"
           data-uppercase
+          data-alphabets
         />
       </div>
 
@@ -879,6 +960,7 @@ function createPaymentBlock(index) {
           id="utrBankName${index}"
           placeholder="BANK NAME"
           data-uppercase
+          data-alphabets
         />
       </div>
 
@@ -887,6 +969,7 @@ function createPaymentBlock(index) {
         <input
           id="utrAcNo${index}"
           placeholder="AC NO"
+          data-numbers
         />
       </div>
 
@@ -1231,6 +1314,11 @@ if (loanId) {
           paymentCount = index + 1;
         });
 
+        // Re-apply validation to payment blocks
+        enforceUppercase();
+        enforceAlphabetsOnly();
+        enforceNumbersOnly();
+        
         updatePaymentButtons();
       }
 
@@ -1285,6 +1373,11 @@ if (loanId) {
           });
           // After populating values, update remove button state
           if (typeof setupRemoveButtonBehavior === 'function') setupRemoveButtonBehavior(block);
+          
+          // Re-apply validation to additional applicant fields
+          enforceUppercase();
+          enforceAlphabetsOnly();
+          enforceNumbersOnly();
         });
 
         if (data.additionalApplicants.length >= MAX_ADDITIONAL_APPLICANTS) {
@@ -1292,6 +1385,11 @@ if (loanId) {
           addAdditionalApplicantBtn.style.opacity = "0.5";
         }
       }
+
+      // Re-apply validation after all data is restored
+      enforceUppercase();
+      enforceAlphabetsOnly();
+      enforceNumbersOnly();
     })
     .catch(err => {
       console.error("Failed to load lead", err);

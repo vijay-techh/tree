@@ -105,7 +105,7 @@
       
       <div>
         <label>Case Dealer</label>
-        <input id="basicCaseDealer" placeholder="Case Dealer *" required data-uppercase />
+        <input id="basicCaseDealer" placeholder="Case Dealer *" required data-uppercase data-alphabets />
       </div>
       <div>
         <label>Ref Name / Mob No</label>
@@ -120,12 +120,12 @@
 
     <div class="form-field">
       <label for="rcNo">RC NO *</label>
-      <input id="rcNo" placeholder="RC NO *" required />
+      <input id="rcNo" placeholder="RC NO *" required data-uppercase />
     </div>
 
     <div class="form-field">
       <label for="vehicle">VEHICLE / VARIANT *</label>
-      <input id="vehicle" placeholder="VEHICLE / VARIANT *" required />
+      <input id="vehicle" placeholder="VEHICLE / VARIANT *" required data-uppercase />
     </div>
 
     <div class="form-field">
@@ -157,17 +157,17 @@
 
     <div class="form-field">
       <label for="kilometreReading">ODOMETRE READING *</label>
-      <input id="kilometreReading" placeholder="ODOMETRE READING *" required />
+      <input id="kilometreReading" placeholder="ODOMETRE READING *" required data-numbers />
     </div>
 
     <div class="form-field">
       <label for="vehicleOwnerContact">VEHICLE VALUATION MOBILE NO *</label>
-      <input id="vehicleOwnerContact" placeholder="VEHICLE VALUATION CONTACT NO *" required />
+      <input id="vehicleOwnerContact" placeholder="VEHICLE VALUATION CONTACT NO *" required data-numbers maxlength="10" />
     </div>
 
     <div class="form-field">
       <label for="vehicleLocation">VEHICLE LOCATION *</label>
-      <input id="vehicleLocation" placeholder="VEHICLE LOCATION *" required />
+      <input id="vehicleLocation" placeholder="VEHICLE LOCATION *" required data-uppercase />
     </div>
 
   </div>
@@ -261,7 +261,7 @@
 
     <div class="form-field">
       <label for="name">NAME *</label>
-      <input id="name" placeholder="NAME *" required data-uppercase />
+      <input id="name" placeholder="NAME *" required data-uppercase data-alphabets />
     </div>
 
     <div class="form-field">
@@ -277,7 +277,7 @@
 
     <div class="form-field">
       <label for="pan">PAN NO *</label>
-      <input id="pan" placeholder="PAN NO *" required />
+      <input id="pan" placeholder="PAN NO *" required data-uppercase maxlength="10" />
     </div>
 
 
@@ -292,7 +292,7 @@
     <div class="form-field">
       <label for="mobile">MOBILE NO *</label>
       <div class="inline-field">
-        <input id="mobile" placeholder="MOBILE NO *" required />
+        <input id="mobile" placeholder="MOBILE NO *" required data-numbers maxlength="10" />
         <button
           type="button"
           id="addAltNoBtn"
@@ -306,7 +306,7 @@
 
     <div class="form-field hidden" id="extraAltMobile">
       <label for="extraAltMobile">ALT NO</label>
-      <input id="extraAltMobile" placeholder="ALT NO" />
+      <input id="extraAltMobile" placeholder="ALT NO" data-numbers maxlength="10" />
     </div>
 
     <div class="form-field">
@@ -328,17 +328,17 @@
     <!-- Spouse Name -->
     <div id="spouseNameField" class="form-field hidden">
       <label for="spouseName">SPOUSE NAME *</label>
-      <input id="spouseName" placeholder="SPOUSE NAME *" data-uppercase />
+      <input id="spouseName" placeholder="SPOUSE NAME *" data-uppercase data-alphabets />
     </div>
 
     <div class="form-field">
       <label for="fatherName">FATHER NAME *</label>
-      <input id="fatherName" placeholder="FATHER NAME *" required data-uppercase />
+      <input id="fatherName" placeholder="FATHER NAME *" required data-uppercase data-alphabets />
     </div>
 
     <div class="form-field">
       <label for="motherName">MOTHER NAME *</label>
-      <input id="motherName" placeholder="MOTHER NAME *" required data-uppercase />
+      <input id="motherName" placeholder="MOTHER NAME *" required data-uppercase data-alphabets />
     </div>
 
   </div>
@@ -415,17 +415,17 @@
 
     <div class="form-field">
       <label for="currentLandmark">LAND MARK *</label>
-      <input id="currentLandmark" placeholder="LAND MARK *" required />
+      <input id="currentLandmark" placeholder="LAND MARK *" required data-uppercase />
     </div>
 
     <div class="form-field">
       <label for="currentPincode">PIN CODE *</label>
-      <input id="currentPincode" placeholder="PIN CODE *" required />
+      <input id="currentPincode" placeholder="PIN CODE *" required data-numbers maxlength="6" />
     </div>
 
     <div class="form-field">
       <label for="currentDistrict">DISTRICT *</label>
-      <input id="currentDistrict" placeholder="DISTRICT *" required />
+      <input id="currentDistrict" placeholder="DISTRICT *" required data-uppercase data-alphabets />
     </div>
 
     <div class="form-field hidden">
@@ -477,17 +477,17 @@
 
     <div class="form-field">
       <label for="permanentLandmark">LAND MARK *</label>
-      <input id="permanentLandmark" placeholder="LAND MARK *" required />
+      <input id="permanentLandmark" placeholder="LAND MARK *" required data-uppercase />
     </div>
 
     <div class="form-field">
       <label for="permanentPincode">PIN CODE *</label>
-      <input id="permanentPincode" placeholder="PIN CODE *" required />
+      <input id="permanentPincode" placeholder="PIN CODE *" required data-numbers maxlength="6" />
     </div>
 
     <div class="form-field">
       <label for="permanentDistrict">DISTRICT *</label>
-      <input id="permanentDistrict" placeholder="DISTRICT *" required />
+      <input id="permanentDistrict" placeholder="DISTRICT *" required data-uppercase data-alphabets />
     </div>
 
     <div class="form-field hidden">
@@ -535,6 +535,7 @@
         id="businessName"
         placeholder="BUSINESS / OFFICE / DESIGNATION NAME *"
         required
+        data-uppercase
       />
     </div>
 
@@ -582,22 +583,22 @@
 
     <div class="form-field">
       <label for="refMob1">MOBILE NO *</label>
-      <input id="refMob1" placeholder="MOBILE NO *" required />
+      <input id="refMob1" placeholder="MOBILE NO *" required data-numbers maxlength="10" />
     </div>
 
     <div class="form-field">
       <label for="refName1">NAME *</label>
-      <input id="refName1" placeholder="NAME *" required data-uppercase />
+      <input id="refName1" placeholder="NAME *" required data-uppercase data-alphabets />
     </div>
 
     <div class="form-field">
       <label for="refMob2">MOBILE NO</label>
-      <input id="refMob2" placeholder="MOBILE NO" />
+      <input id="refMob2" placeholder="MOBILE NO" data-numbers maxlength="10" />
     </div>
 
     <div class="form-field">
       <label for="refName2">NAME</label>
-      <input id="refName2" placeholder="NAME" data-uppercase />
+      <input id="refName2" placeholder="NAME" data-uppercase data-alphabets />
     </div>
 
   </div>
@@ -640,6 +641,7 @@
         placeholder="NOMINEE NAME *"
         required
         data-uppercase
+        data-alphabets
       />
     </div>
 
@@ -771,8 +773,8 @@
             <option>Suryoday Small Finance Bank Ltd</option>
           </optgroup>
         </select>
-        <input id="bankBranch" placeholder="BRANCH *" required />
-        <input id="loginExecutive" placeholder="LOGIN ASSIGNED *" required data-uppercase />
+        <input id="bankBranch" placeholder="BRANCH *" required data-uppercase />
+        <input id="loginExecutive" placeholder="LOGIN ASSIGNED *" required data-uppercase data-alphabets />
       </div>
     </div>
 
