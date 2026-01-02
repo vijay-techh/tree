@@ -58,6 +58,46 @@ enforceUppercase();
 enforceAlphabetsOnly();
 enforceNumbersOnly();
 
+/* =========================
+   AUTOMATIC LOAN ID GENERATION
+========================= */
+
+function generateLoanId() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  
+  // Get current counter from localStorage or start with 0
+  const storageKey = `loanCounter_${year}${month}`;
+  let counter = parseInt(localStorage.getItem(storageKey) || '0');
+  
+  // Generate loan ID: YYYYMM0001 format (don't increment yet)
+  const loanId = `${year}${month}${String(counter + 1).padStart(4, '0')}`;
+  
+  return { loanId, storageKey, counter };
+}
+
+function incrementLoanCounter(storageKey, currentCounter) {
+  // Only increment when form is actually submitted
+  const newCounter = currentCounter + 1;
+  localStorage.setItem(storageKey, newCounter.toString());
+}
+
+// Set loan ID when page loads (preview only)
+document.addEventListener('DOMContentLoaded', function() {
+  const loanIdField = document.getElementById('loanId');
+  if (loanIdField) {
+    const { loanId } = generateLoanId();
+    loanIdField.value = loanId;
+    loanIdField.readOnly = true;
+    
+    // Add visual indicator that it's auto-generated
+    loanIdField.style.backgroundColor = '#f8fafc';
+    loanIdField.style.color = '#6b7280';
+    loanIdField.title = 'Auto-generated Loan ID - will be finalized on submission';
+  }
+});
+
 // Auto values
 document.getElementById("dateTime").value = new Date().toLocaleString();
 
@@ -1170,6 +1210,10 @@ console.log("FINAL SUBMIT DATA", leadData);
   });
 
   if (res.ok) {
+    // Only increment loan ID counter when form is successfully submitted
+    const { storageKey, counter } = generateLoanId();
+    incrementLoanCounter(storageKey, counter);
+    
     window.location.href = "/view-cases.html";
   } else {
     alert("Failed to save lead");
