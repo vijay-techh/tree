@@ -1241,23 +1241,23 @@ if (rtoDisplay && rtoDropdown) {
   });
 }
 
-function disableFormForView() {
-  // disable inputs, textareas and selects
-  document.querySelectorAll('input,textarea,select').forEach(el => {
-    // keep hidden inputs enabled (they may be needed)
-    if (el.type === 'hidden') return;
-    try { el.disabled = true; } catch (e) {}
-    try { el.readOnly = true; } catch (e) {}
-  });
+// function disableFormForView() {
+//   // disable inputs, textareas and selects
+//   document.querySelectorAll('input,textarea,select').forEach(el => {
+//     // keep hidden inputs enabled (they may be needed)
+//     if (el.type === 'hidden') return;
+//     try { el.disabled = true; } catch (e) {}
+//     try { el.readOnly = true; } catch (e) {}
+//   });
 
-  // disable other buttons (like add/remove) but keep navigation/back buttons enabled if needed
-  document.querySelectorAll('button').forEach(b => {
-    if (b.type === 'submit') return;
-    // allow any button with data-allow-view attribute to remain enabled
-    if (b.hasAttribute('data-allow-view')) return;
-    b.disabled = true;
-  });
-}
+//   // disable other buttons (like add/remove) but keep navigation/back buttons enabled if needed
+//   document.querySelectorAll('button').forEach(b => {
+//     if (b.type === 'submit') return;
+//     // allow any button with data-allow-view attribute to remain enabled
+//     if (b.hasAttribute('data-allow-view')) return;
+//     b.disabled = true;
+//   });
+// }
 
 
 
@@ -1381,6 +1381,51 @@ if (loanId) {
       // =========================
       // 3️⃣ Restore Additional Applicants
       // =========================
+
+
+
+
+
+
+
+
+          // =========================
+          // 🧩 Rebuild Additional Applicants from flat fields
+          // =========================
+          if (!data.additionalApplicants) {
+            const applicants = [];
+
+            [2, 3].forEach(i => {
+              const prefix = `additionalApplicant${i}`;
+
+              // detect if applicant exists by checking name
+              if (data[`${prefix}Name`]) {
+                const obj = {};
+
+                Object.keys(data).forEach(key => {
+                  if (key.startsWith(prefix)) {
+                    const cleanKey = key.replace(prefix, "");
+                    obj[cleanKey] = data[key];
+                  }
+                });
+
+                applicants.push(obj);
+              }
+            });
+
+            if (applicants.length) {
+              data.additionalApplicants = applicants;
+            }
+          }
+
+
+
+
+
+
+
+
+
       if (Array.isArray(data.additionalApplicants)) {
         data.additionalApplicants.forEach((applicant, idx) => {
           if (idx >= MAX_ADDITIONAL_APPLICANTS) return;
@@ -1390,10 +1435,34 @@ if (loanId) {
           additionalApplicantsContainer.appendChild(block);
           initAdditionalApplicantPin(visibleIndex);
 
-          Object.keys(applicant).forEach(key => {
-            const el = block.querySelector(`#${key}`);
-            if (el) el.value = applicant[key];
-          });
+
+
+
+
+
+
+
+
+              Object.keys(applicant).forEach(key => {
+                const fieldId = `additionalApplicant${visibleIndex}${key}`;
+                const el = document.getElementById(fieldId);
+                if (el) el.value = applicant[key];
+              });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              
           // After populating values, update remove button state
           if (typeof setupRemoveButtonBehavior === 'function') setupRemoveButtonBehavior(block);
           
