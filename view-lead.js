@@ -55,7 +55,7 @@ async function fetchAndPopulateLead() {
     populateFormFields(lead);
     
     // Disable all form fields for view mode
-    disableFormFields();
+    // disableFormFields();
     
     // Show actions section
     showActions(lead);
@@ -254,40 +254,56 @@ function populateAdditionalApplicants(applicants) {
   });
 }
 
-// Disable all form fields for view mode
-function disableFormFields() {
-  // Add view-mode class to main container
-  document.getElementById('leadFormContainer').classList.add('view-mode');
+
+
+
+
+// // Disable all form fields for view mode
+// function disableFormFields() {
+//   // Add view-mode class to main container
+//   document.getElementById('leadFormContainer').classList.add('view-mode');
   
-  // Disable all inputs, selects, and textareas
-  const allInputs = document.querySelectorAll('input, select, textarea');
-  allInputs.forEach(input => {
-    input.disabled = true;
-    input.readOnly = true;
-  });
+//   // Disable all inputs, selects, and textareas
+//   const allInputs = document.querySelectorAll('input, select, textarea');
+//   allInputs.forEach(input => {
+//     input.disabled = true;
+//     input.readOnly = true;
+//   });
   
-  // Hide file inputs (they don't work well in view mode)
-  const fileInputs = document.querySelectorAll('input[type="file"]');
-  fileInputs.forEach(input => {
-    input.style.display = 'none';
-    // Add a text display instead
-    const label = input.previousElementSibling;
-    if (label && label.tagName === 'LABEL') {
-      const display = document.createElement('div');
-      display.style.cssText = 'padding: 8px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; margin-top: 4px; color: #374151;';
-      display.textContent = 'Document uploaded (file not shown in view mode)';
-      label.parentNode.insertBefore(display, input.nextSibling);
-    }
-  });
+//   // Hide file inputs (they don't work well in view mode)
+//   const fileInputs = document.querySelectorAll('input[type="file"]');
+//   fileInputs.forEach(input => {
+//     input.style.display = 'none';
+//     // Add a text display instead
+//     const label = input.previousElementSibling;
+//     if (label && label.tagName === 'LABEL') {
+//       const display = document.createElement('div');
+//       display.style.cssText = 'padding: 8px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; margin-top: 4px; color: #374151;';
+//       display.textContent = 'Document uploaded (file not shown in view mode)';
+//       label.parentNode.insertBefore(display, input.nextSibling);
+//     }
+//   });
   
-  // Hide add/remove buttons
-  const addButtons = document.querySelectorAll('.icon-btn.plus-state, .icon-btn.minus-state');
-  addButtons.forEach(btn => btn.style.display = 'none');
+//   // Hide add/remove buttons
+//   const addButtons = document.querySelectorAll('.icon-btn.plus-state, .icon-btn.minus-state');
+//   addButtons.forEach(btn => btn.style.display = 'none');
   
-  // Hide checkboxes
-  const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-  checkboxes.forEach(cb => cb.style.display = 'none');
-}
+//   // Hide checkboxes
+//   const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+//   checkboxes.forEach(cb => cb.style.display = 'none');
+// }
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Show actions section
 function showActions(lead) {

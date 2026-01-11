@@ -32,3 +32,22 @@ npm start
 ```bash
 vercel dev
 ```
+
+first change from 261 to 295
+
+second change for 58
+
+third change from line 1282 to 1333
+
+fourth change 
+remove these page
+shared lead 
+view lead js and html
+
+and leadform code
+
+added a line at 1288
+
+commented at 1418
+
+seventh change at 168 (major)

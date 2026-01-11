@@ -1285,6 +1285,7 @@ function disableFormForView() {
 // =========================
 const params = new URLSearchParams(window.location.search);
 const loanId = params.get("loanId"); // ✅ STRING or null
+const isView = params.get("view") === "1";
 
 
 
@@ -1414,7 +1415,7 @@ if (loanId) {
       enforceNumbersOnly();
       
       // Disable form for view mode
-      disableFormForView();
+      // disableFormForView();
     })
     .catch(err => {
       console.error("Failed to load lead", err);
