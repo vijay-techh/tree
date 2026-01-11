@@ -22,10 +22,12 @@ function renderUsers(filter = "") {
   const tbodyAdmins = document.getElementById("adminsTableBody");
   const tbodyManagers = document.getElementById("managersTableBody");
   const tbodyEmployees = document.getElementById("employeesTableBody");
+  const tbodyDealers = document.getElementById("dealersTableBody");
 
   tbodyAdmins.innerHTML = "";
   tbodyManagers.innerHTML = "";
   tbodyEmployees.innerHTML = "";
+  tbodyDealers.innerHTML = "";
 
   const term = filter.trim().toLowerCase();
 
@@ -124,6 +126,7 @@ function renderUsers(filter = "") {
     const role = (u.role || "employee").toLowerCase();
     if (role === "admin") tbodyAdmins.appendChild(tr);
     else if (role === "manager") tbodyManagers.appendChild(tr);
+    else if (role === "dealer") tbodyDealers.appendChild(tr);
     else tbodyEmployees.appendChild(tr);
   });
 }

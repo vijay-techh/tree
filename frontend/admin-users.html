@@ -70,6 +70,23 @@
           <tbody id="employeesTableBody"></tbody>
         </table>
       </section>
+
+      <section class="users-section">
+        <h2>Dealers</h2>
+        <table class="users-table" aria-describedby="dealers-list">
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Password</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Last Login</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="dealersTableBody"></tbody>
+        </table>
+      </section>
     </div>
 
     <!-- Create / Edit Modal -->
@@ -89,6 +106,7 @@
           <select id="modalRole">
             <option value="employee">Employee</option>
             <option value="manager">Manager</option>
+            <option value="dealer">Dealer</option>
           </select>
         </div>
         <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">

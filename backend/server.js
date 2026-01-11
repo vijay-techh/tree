@@ -328,21 +328,45 @@ app.get("/api/admin/users", async (req, res) => {
   }
 });
 
+
+//tharun
 app.post("/api/admin/users", async (req, res) => {
   try {
     const { username, password, role } = req.body;
-    if (!username || !password || !role) return res.status(400).json({ error: "Missing fields" });
-    const roleNormalized = role.toLowerCase();
-    if (!["manager", "employee"].includes(roleNormalized)) {
-      return res.status(400).json({ error: "Invalid role. Only 'manager' or 'employee' may be created." });
+
+    console.log("ADMIN CREATE USER:", req.body);
+
+    if (!username || !password || !role) {
+      return res.status(400).json({ error: "Missing fields" });
     }
-    await pool.query(`INSERT INTO users (username, password, role, status) VALUES ($1, $2, $3, 'active')`, [username, password, roleNormalized]);
+
+    const roleNormalized = role.toLowerCase();
+
+    const allowed = ["manager", "employee", "dealer"];
+
+    if (!allowed.includes(roleNormalized)) {
+      return res.status(400).json({
+        error: "Invalid role. Only 'manager', 'employee', or 'dealer' may be created."
+      });
+    }
+
+    await pool.query(
+      `INSERT INTO users (username, password, role, status)
+       VALUES ($1, $2, $3, 'active')`,
+      [username, password, roleNormalized]
+    );
+
     res.json({ success: true });
+
   } catch (err) {
-    console.error("Create user error:", err);
+    console.error("CREATE USER ERROR:", err);
     res.status(500).json({ error: "Failed to create user" });
   }
 });
+
+
+
+
 
 app.delete("/api/admin/users/:id", async (req, res) => {
   try {
@@ -404,12 +428,22 @@ app.patch("/api/admin/users/:id/status", async (req, res) => {
 
 app.post("/api/admin/assign-employee", async (req, res) => {
   try {
-    const { managerId, employeeId } = req.body;
-    if (!managerId || !employeeId) return res.status(400).json({ error: "managerId & employeeId required" });
-    await pool.query(`INSERT INTO manager_employees (manager_id, employee_id) VALUES ($1, $2) ON CONFLICT DO NOTHING`, [managerId, employeeId]);
+    const { parentId, childId } = req.body;
+
+    if (!parentId || !childId) {
+      return res.status(400).json({ error: "parentId & childId required" });
+    }
+
+    await pool.query(
+      `INSERT INTO manager_employees (manager_id, employee_id)
+       VALUES ($1, $2)
+       ON CONFLICT DO NOTHING`,
+      [parentId, childId]
+    );
+
     res.json({ success: true });
   } catch (err) {
-    console.error("Assign employee error:", err);
+    console.error("Assign error:", err);
     res.status(500).json({ error: "Assignment failed" });
   }
 });

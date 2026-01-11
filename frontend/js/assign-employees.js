@@ -6,6 +6,7 @@ if (!user || user.role !== "admin") {
 
 let managers = [];
 let employees = [];
+let dealers = [];
 let currentAssignments = [];
 
 // Toast notification
@@ -29,15 +30,20 @@ async function loadUsers() {
     console.log('All users:', users);
     
     managers = users
-    .filter(u => u.role === "manager" && u.status === "active")
-    .map(u => ({ ...u, id: Number(u.id) }));
+      .filter(u => u.role === "manager" && u.status === "active")
+      .map(u => ({ ...u, id: Number(u.id) }));
 
     employees = users
-    .filter(u => u.role === "employee" && u.status === "active")
-    .map(u => ({ ...u, id: Number(u.id) }));
+      .filter(u => u.role === "employee" && u.status === "active")
+      .map(u => ({ ...u, id: Number(u.id) }));
+
+    dealers = users
+      .filter(u => u.role === "dealer" && u.status === "active")
+      .map(u => ({ ...u, id: Number(u.id) }));
     
     console.log('Managers:', managers);
     console.log('Employees:', employees);
+    console.log('Dealers:', dealers);
 
     populateManagerSelect();
     renderEmployees();
@@ -54,22 +60,32 @@ function populateManagerSelect() {
 
   const defaultOption = document.createElement("option");
   defaultOption.value = "";
-  defaultOption.textContent = "Select a manager...";
+  defaultOption.textContent = "Select a manager or employee...";
   mgrSelect.appendChild(defaultOption);
 
+  // Add managers to dropdown
   managers.forEach(m => {
     const opt = document.createElement("option");
     opt.value = m.id;
-    opt.textContent = m.username;
+    opt.textContent = `${m.username} (Manager)`;
+    mgrSelect.appendChild(opt);
+  });
+
+  // Add employees to dropdown (they can be bosses)
+  employees.forEach(e => {
+    const opt = document.createElement("option");
+    opt.value = e.id;
+    opt.textContent = `${e.username} (Employee)`;
     mgrSelect.appendChild(opt);
   });
 
   mgrSelect.addEventListener("change", onManagerChange);
 
-  // 🔥🔥🔥 THIS IS THE FIX 🔥🔥🔥
-  if (managers.length > 0) {
-    mgrSelect.value = managers[0].id;
-    loadCurrentAssignments(managers[0].id);
+  // Auto-select first available manager
+  const availableManagers = [...managers, ...employees];
+  if (availableManagers.length > 0) {
+    mgrSelect.value = availableManagers[0].id;
+    loadCurrentAssignments(availableManagers[0].id);
   }
 }
 
@@ -115,18 +131,20 @@ function renderEmployees() {
   const div = document.getElementById("employeeList");
   div.innerHTML = "";
 
-  if (employees.length === 0) {
+  const assignableUsers = [...employees, ...dealers];
+  
+  if (assignableUsers.length === 0) {
     div.innerHTML = `
       <div class="empty-state">
         <div class="empty-state-icon">👥</div>
-        <p>No active employees available</p>
+        <p>No active employees or dealers available</p>
       </div>
     `;
     updateSelectedCount();
     return;
   }
 
-  employees.forEach(e => {
+  assignableUsers.forEach(e => {
     const isAssigned = currentAssignments.some(
       id => Number(id) === Number(e.id)
     );
@@ -138,7 +156,7 @@ function renderEmployees() {
       <input type="checkbox" class="employee-checkbox" value="${e.id}" ${isAssigned ? 'checked' : ''}>
       <div class="employee-info">
         <div class="employee-name">${e.username}</div>
-        <div class="employee-role">Employee</div>
+        <div class="employee-role">${e.role}</div>
       </div>
       <div class="employee-avatar">${e.username.charAt(0).toUpperCase()}</div>
     `;
@@ -200,48 +218,84 @@ async function saveAssignments() {
   const checked = [...document.querySelectorAll("#employeeList input:checked")]
     .map(cb => Number(cb.value));
 
+  // Get the selected boss details
+  const selectedBoss = [...managers, ...employees].find(u => u.id === Number(managerId));
+  
+  // Validate assignment rules
+  for (const employeeId of checked) {
+    const employee = [...employees, ...dealers].find(u => u.id === employeeId);
+    
+    if (!employee) continue;
+    
+    // Rules:
+    // Employee → Manager (allowed)
+    // Dealer → Manager (allowed) 
+    // Dealer → Employee (allowed)
+    // Employee → Employee (NOT allowed)
+    // Manager → Anyone (NOT allowed)
+    // Dealer → Dealer (NOT allowed)
+    
+    if (employee.role === 'employee' && selectedBoss.role === 'employee') {
+      showToast(`❌ Cannot assign Employee "${employee.username}" to Employee "${selectedBoss.username}". Employees can only be assigned to Managers.`);
+      return;
+    }
+    
+    if (employee.role === 'manager') {
+      showToast(`❌ Cannot assign Manager "${employee.username}" to anyone. Managers cannot be assigned.`);
+      return;
+    }
+    
+    if (employee.role === 'dealer' && selectedBoss.role === 'dealer') {
+      showToast(`❌ Cannot assign Dealer "${employee.username}" to Dealer "${selectedBoss.username}". Dealers can only be assigned to Managers or Employees.`);
+      return;
+    }
+  }
+
   const toAdd = checked.filter(id => !currentAssignments.includes(id));
   const toRemove = currentAssignments.filter(id => !checked.includes(id));
 
-  try {
-    // ADD new assignments
-    for (const employeeId of toAdd) {
-      await fetch("/api/admin/assign-employee", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ managerId, employeeId })
-      });
-    }
+try {
+  // ADD new assignments
+  for (const employeeId of toAdd) {
+    await fetch("/api/admin/assign-employee", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        parentId: Number(managerId),
+        childId: Number(employeeId)
+      })
+    });
+  }   // ← THIS BRACE WAS MISSING
 
-    // REMOVE unchecked assignments
-    for (const employeeId of toRemove) {
-      await fetch("/api/admin/unassign-employee", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ managerId, employeeId })
-      });
-    }
-
-    if (toAdd.length > 0 && toRemove.length > 0) {
-      showToast(`Added ${toAdd.length} and removed ${toRemove.length} employee(s)`);
-    } else if (toAdd.length > 0) {
-      showToast(`Successfully assigned ${toAdd.length} employee(s)`);
-    } else if (toRemove.length > 0) {
-      showToast(`Successfully unassigned ${toRemove.length} employee(s)`);
-    } else {
-      showToast("No changes made");
-    }
-    
-    await loadCurrentAssignments(managerId);
-    
-    // Wait a bit for the database to update, then refresh the table
-    setTimeout(async () => {
-      await loadAllAssignments();
-    }, 500);
-  } catch (err) {
-    console.error(err);
-    showToast("Failed to save assignments");
+  // REMOVE unchecked assignments
+  for (const employeeId of toRemove) {
+    await fetch("/api/admin/unassign-employee", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        parentId: Number(managerId),
+        childId: Number(employeeId)
+      })
+    });
   }
+
+  if (toAdd.length > 0 && toRemove.length > 0) {
+    showToast(`Added ${toAdd.length} and removed ${toRemove.length} assignment(s)`);
+  } else if (toAdd.length > 0) {
+    showToast(`Successfully assigned ${toAdd.length} user(s)`);
+  } else if (toRemove.length > 0) {
+    showToast(`Successfully unassigned ${toRemove.length} user(s)`);
+  } else {
+    showToast("No changes made");
+  }
+
+  await loadCurrentAssignments(managerId);
+  setTimeout(loadAllAssignments, 500);
+
+} catch (err) {
+  console.error(err);
+  showToast("Failed to save assignments");
+}
 }
 
 async function loadAllAssignments() {
@@ -262,9 +316,10 @@ async function loadAllAssignments() {
           console.log(`Manager ${manager.username} assignments:`, employeeIds);
           
           if (employeeIds && employeeIds.length > 0) {
-            const assignedEmployees = employees.filter(e => 
-              employeeIds.some(id => Number(id) === Number(e.id))
+           const assignedEmployees = [...employees, ...dealers].filter(u =>
+              employeeIds.some(id => Number(id) === Number(u.id))
             );
+
             
             if (assignedEmployees.length > 0) {
               assignments.push({
@@ -348,11 +403,15 @@ async function unassignAllFromManager(managerId, managerName) {
       try {
         console.log(`Attempting to unassign employee ${employeeId} from manager ${managerId}`);
         
-        const unassignRes = await fetch("/api/admin/unassign-employee", {
-          method: "DELETE",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ managerId: Number(managerId), employeeId: Number(employeeId) })
-        });
+       const unassignRes = await fetch("/api/admin/unassign-employee", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          parentId: Number(managerId),
+          childId: Number(employeeId)
+        })
+      });
+
         
         console.log(`Unassign response status:`, unassignRes.status);
         
