@@ -171,6 +171,63 @@ app.post("/api/leads", async (req, res) => {
     );
 
     console.log("LEAD CREATED SUCCESSFULLY:", loanId);
+
+    // 🎯 NOTIFICATION SYSTEM: Create notifications for admins if creator is employee or manager
+    try {
+      console.log("🔔 Starting notification creation process...");
+      
+      // Get creator details
+      const creatorResult = await pool.query(
+        "SELECT username, role FROM users WHERE id = $1 AND deleted_at IS NULL",
+        [userId]
+      );
+      
+      console.log("Creator query result:", creatorResult.rows);
+      
+      if (creatorResult.rows.length > 0) {
+        const creator = creatorResult.rows[0];
+        console.log("Creator found:", creator);
+        
+        // Only create notifications for employees and managers
+        if (creator.role === 'employee' || creator.role === 'manager') {
+          console.log("✅ Creator is employee/manager, creating notifications...");
+          
+          // Get all admin users
+          const adminsResult = await pool.query(
+            "SELECT id FROM users WHERE role = 'admin' AND deleted_at IS NULL"
+          );
+          
+          console.log("Admin users found:", adminsResult.rows.length);
+          
+          if (adminsResult.rows.length > 0) {
+            const notificationMessage = `${creator.username} (${creator.role}) created lead ${loanId}`;
+            console.log("Notification message:", notificationMessage);
+            
+            // Insert notification for each admin
+            for (const admin of adminsResult.rows) {
+              console.log(`Creating notification for admin ${admin.id}`);
+              await pool.query(
+                `INSERT INTO notifications (user_id, message, is_read, created_at, type) 
+                 VALUES ($1, $2, false, NOW(), 'lead_created')`,
+                [admin.id, notificationMessage]
+              );
+            }
+            
+            console.log(`✅ Created notifications for ${adminsResult.rows.length} admins: ${notificationMessage}`);
+          } else {
+            console.log("❌ No admin users found");
+          }
+        } else {
+          console.log(`❌ Creator is ${creator.role}, not creating notifications`);
+        }
+      } else {
+        console.log("❌ Creator not found in database");
+      }
+    } catch (notificationErr) {
+      console.error("❌ NOTIFICATION CREATION ERROR:", notificationErr);
+      // Don't fail the lead creation if notification fails
+    }
+
     res.status(201).json({ success: true, loanId });
 
   } catch (err) {
@@ -520,8 +577,73 @@ app.delete("/api/admin/unassign-employee", async (req, res) => {
   }
 });
 
+// ----------------- Admin Notifications -----------------
+app.get("/api/admin/notifications", async (req, res) => {
+  try {
+    const adminId = parseInt(req.headers["x-admin-id"]);
+    if (!adminId) return res.status(403).json({ error: "Unauthorized" });
 
+    // Validate admin
+    const adminCheck = await pool.query(
+      "SELECT role FROM users WHERE id = $1 AND deleted_at IS NULL",
+      [adminId]
+    );
+    if (adminCheck.rows.length === 0 || adminCheck.rows[0].role !== 'admin') {
+      return res.status(403).json({ error: "Admin access required" });
+    }
 
+    // Get notifications ordered by newest first
+    const notificationsResult = await pool.query(
+      `SELECT id, message, is_read, created_at, type 
+       FROM notifications 
+       WHERE user_id = $1 
+       ORDER BY created_at DESC`,
+      [adminId]
+    );
+
+    res.json({
+      notifications: notificationsResult.rows,
+      unreadCount: notificationsResult.rows.filter(n => !n.is_read).length
+    });
+
+  } catch (err) {
+    console.error("Get notifications error:", err);
+    res.status(500).json({ error: "Failed to get notifications" });
+  }
+});
+
+app.post("/api/admin/notifications/read", async (req, res) => {
+  try {
+    const adminId = parseInt(req.headers["x-admin-id"]);
+    if (!adminId) return res.status(403).json({ error: "Unauthorized" });
+
+    // Validate admin
+    const adminCheck = await pool.query(
+      "SELECT role FROM users WHERE id = $1 AND deleted_at IS NULL",
+      [adminId]
+    );
+    if (adminCheck.rows.length === 0 || adminCheck.rows[0].role !== 'admin') {
+      return res.status(403).json({ error: "Admin access required" });
+    }
+
+    // Mark all notifications for this admin as read
+    const result = await pool.query(
+      `UPDATE notifications 
+       SET is_read = true 
+       WHERE user_id = $1 AND is_read = false`,
+      [adminId]
+    );
+
+    res.json({ 
+      success: true, 
+      markedAsRead: result.rowCount 
+    });
+
+  } catch (err) {
+    console.error("Mark notifications read error:", err);
+    res.status(500).json({ error: "Failed to mark notifications as read" });
+  }
+});
 
 
 module.exports = app;

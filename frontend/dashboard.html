@@ -38,15 +38,34 @@
     <header class="header">
       <h2>Business Performance</h2>
 
-      <div class="filters">
-        <input type="date" />
-        <input type="date" />
-        <select>
-          <option>Product Type</option>
-          <option>New Car</option>
-          <option>Used Car</option>
-        </select>
-        <button>Search</button>
+      <div class="header-right">
+        <!-- Notification Bell (Admin Only) -->
+        <div class="notification-bell" id="notificationBell" style="display: none;">
+          <div class="bell-icon">🔔</div>
+          <div class="notification-badge" id="notificationBadge">0</div>
+          
+          <!-- Notification Dropdown -->
+          <div class="notification-dropdown" id="notificationDropdown">
+            <div class="notification-header">
+              <h4>Notifications</h4>
+              <button class="mark-all-read" id="markAllRead">Mark all as read</button>
+            </div>
+            <div class="notification-list" id="notificationList">
+              <div class="no-notifications">No notifications</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="filters">
+          <input type="date" />
+          <input type="date" />
+          <select>
+            <option>Product Type</option>
+            <option>New Car</option>
+            <option>Used Car</option>
+          </select>
+          <button>Search</button>
+        </div>
       </div>
     </header>
 
