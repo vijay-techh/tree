@@ -48,6 +48,12 @@ async function loadUsers() {
     populateManagerSelect();
     renderEmployees();
     loadAllAssignments();
+    
+    // Add search functionality
+    const searchInput = document.getElementById("employeeSearch");
+    if (searchInput) {
+      searchInput.addEventListener("input", renderEmployees);
+    }
   } catch (err) {
     console.error(err);
     showToast("Failed to load users");
@@ -137,19 +143,64 @@ function renderEmployees() {
   div.innerHTML = "";
 
   const assignableUsers = [...employees, ...dealers];
+  const searchTerm = document.getElementById("employeeSearch").value.toLowerCase().trim();
   
-  if (assignableUsers.length === 0) {
+  // Filter employees based on search with exact match priority
+  const filteredUsers = assignableUsers.filter(user => {
+    if (!searchTerm) return true; // Show all if search is empty
+    
+    const userName = user.username.toLowerCase();
+    const userRole = user.role.toLowerCase();
+    
+    // Exact match gets highest priority
+    if (userName === searchTerm || userRole === searchTerm) {
+      return true;
+    }
+    
+    // Partial match for username
+    if (userName.includes(searchTerm)) {
+      return true;
+    }
+    
+    // Partial match for role
+    if (userRole.includes(searchTerm)) {
+      return true;
+    }
+    
+    return false;
+  });
+
+  // Sort results: exact matches first, then alphabetical
+  filteredUsers.sort((a, b) => {
+    const aName = a.username.toLowerCase();
+    const bName = b.username.toLowerCase();
+    const aRole = a.role.toLowerCase();
+    const bRole = b.role.toLowerCase();
+    
+    const aExactMatch = aName === searchTerm || aRole === searchTerm;
+    const bExactMatch = bName === searchTerm || bRole === searchTerm;
+    
+    // Exact matches come first
+    if (aExactMatch && !bExactMatch) return -1;
+    if (!aExactMatch && bExactMatch) return 1;
+    
+    // Then sort alphabetically
+    return aName.localeCompare(bName);
+  });
+
+  if (filteredUsers.length === 0) {
     div.innerHTML = `
       <div class="empty-state">
-        <div class="empty-state-icon">👥</div>
-        <p>No active employees or dealers available</p>
+        <div class="empty-state-icon">🔍</div>
+        <p>No employees or dealers found for "${searchTerm}"</p>
+        <small>Try searching by username (exact) or role (employee/dealer/manager)</small>
       </div>
     `;
     updateSelectedCount();
     return;
   }
 
-  assignableUsers.forEach(e => {
+  filteredUsers.forEach(e => {
     const isAssigned = currentAssignments.some(
       id => Number(id) === Number(e.id)
     );
