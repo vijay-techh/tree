@@ -367,29 +367,52 @@ app.post("/api/validate-pincode", async (req, res) => {
 // ----------------- Admin users -----------------
 app.get("/api/admin/users", async (req, res) => {
   try {
-    // require an admin header to protect this sensitive endpoint
     const adminId = parseInt(req.headers["x-admin-id"]);
     if (!adminId) return res.status(403).json({ error: "Unauthorized" });
 
-    const adminCheck = await pool.query("SELECT role FROM users WHERE id = $1 AND deleted_at IS NULL", [adminId]);
-    if (!adminCheck.rows.length || adminCheck.rows[0].role !== 'admin') {
+    const adminCheck = await pool.query(
+      "SELECT role FROM users WHERE id = $1 AND deleted_at IS NULL",
+      [adminId]
+    );
+
+    if (!adminCheck.rows.length || adminCheck.rows[0].role !== "admin") {
       return res.status(403).json({ error: "Only admins may access this resource" });
     }
 
-    // Return password field as requested (WARNING: plaintext passwords are insecure)
-    const { rows } = await pool.query("SELECT id, username, password, role, status, last_login FROM users WHERE deleted_at IS NULL ORDER BY id");
+    const { rows } = await pool.query(`
+      SELECT 
+        u.id,
+        u.username,
+        u.password,
+        u.role,
+        u.status,
+        u.last_login,
+
+        mp.first_name,
+        mp.mobile,
+        mp.email,
+        mp.bank_name
+
+      FROM users u
+      LEFT JOIN manager_profiles mp ON mp.user_id = u.id
+      WHERE u.deleted_at IS NULL
+      ORDER BY u.id
+    `);
+
     res.json(rows);
+
   } catch (err) {
-    console.error(err);
+    console.error("FETCH USERS ERROR:", err);
     res.status(500).json({ error: "Failed to fetch users" });
   }
 });
 
 
+
 //tharun
 app.post("/api/admin/users", async (req, res) => {
   try {
-    const { username, password, role } = req.body;
+    const { username, password, role, profile } = req.body;
 
     console.log("ADMIN CREATE USER:", req.body);
 
@@ -398,20 +421,52 @@ app.post("/api/admin/users", async (req, res) => {
     }
 
     const roleNormalized = role.toLowerCase();
-
     const allowed = ["manager", "employee", "dealer"];
 
     if (!allowed.includes(roleNormalized)) {
-      return res.status(400).json({
-        error: "Invalid role. Only 'manager', 'employee', or 'dealer' may be created."
-      });
+      return res.status(400).json({ error: "Invalid role" });
     }
 
-    await pool.query(
+    if (roleNormalized === "manager") {
+      if (!profile) {
+        return res.status(400).json({ error: "Manager profile required" });
+      }
+      if (!profile.firstName || !profile.mobile || !profile.email) {
+        return res.status(400).json({ error: "Incomplete manager profile" });
+      }
+    }
+
+    // Insert user
+    const userRes = await pool.query(
       `INSERT INTO users (username, password, role, status)
-       VALUES ($1, $2, $3, 'active')`,
+       VALUES ($1, $2, $3, 'active')
+       RETURNING id`,
       [username, password, roleNormalized]
     );
+
+    const userId = userRes.rows[0].id;
+
+    // Insert manager KYC if manager
+    if (roleNormalized === "manager") {
+      await pool.query(
+        `INSERT INTO manager_profiles
+        (user_id, first_name, dob, pan, aadhar, mobile, email, location, account_no, ifsc, bank_name)
+        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)`,
+        [
+          userId,
+          profile.firstName,
+          profile.dob,
+          profile.pan,
+          profile.aadhar,
+          profile.mobile,
+          profile.email,
+          profile.location,
+          profile.bank.accountNo,
+          profile.bank.ifsc,
+          profile.bank.bankName
+        ]
+      );
+    }
 
     res.json({ success: true });
 
@@ -420,6 +475,8 @@ app.post("/api/admin/users", async (req, res) => {
     res.status(500).json({ error: "Failed to create user" });
   }
 });
+
+
 
 
 
