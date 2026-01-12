@@ -45,19 +45,35 @@ function renderUsers(filter = "") {
     const status = u.status || "active";
     const statusClass = status === "active" ? "status-active" : "status-disabled";
 
-    tr.innerHTML = `
-      <td>${u.username}</td>
-      <td>
-        ${u.password ? `<span class="pw-text">••••••••</span><button type="button" class="pw-toggle" title="Show password" aria-label="Show password" style="margin-left:8px">👁️</button>` : '••••••••'}
-      </td>
-      <td>${formatRole(u.role)}</td>
-      <td>
-        <span class="status-pill ${statusClass}">
-          ${status}
-        </span>
-      </td>
-      <td>${u.last_login ? new Date(u.last_login).toLocaleString() : "-"}</td>
-    `;
+tr.innerHTML = `
+  <td>${u.username}</td>
+  <td>
+    ${u.password ? `<span class="pw-text">••••••••</span><button type="button" class="pw-toggle" style="margin-left:8px">👁️</button>` : '••••••••'}
+  </td>
+  <td>${formatRole(u.role)}</td>
+  <td>
+    <span class="status-pill ${statusClass}">
+      ${status}
+    </span>
+  </td>
+  <td class="info-cell"></td>
+  <td>${u.last_login ? new Date(u.last_login).toLocaleString() : "-"}</td>
+`;
+// Add Info button for managers
+const infoCell = tr.querySelector(".info-cell");
+
+if (u.role === "manager") {
+  const infoBtn = document.createElement("button");
+  infoBtn.className = "info-btn";
+  infoBtn.textContent = "ⓘ";
+  infoBtn.title = "View manager info";
+  infoBtn.addEventListener("click", () => openManagerInfo(u.id));
+  infoCell.appendChild(infoBtn);
+} else {
+  infoCell.textContent = "—";
+}
+
+document.getElementById("closeInfoBtn")?.addEventListener("click", closeManagerInfo);
 
     // attach password toggle handler when a toggle button exists
     const pwToggle = tr.querySelector('.pw-toggle');
@@ -160,16 +176,26 @@ async function loadUsers() {
 /* ---------------- MODAL ---------------- */
 function openModal(title) {
   document.getElementById("modalTitle").textContent = title;
-  document.getElementById("modalBackdrop").classList.add("show");
-}
 
+  const backdrop = document.getElementById("modalBackdrop");
+  if (!backdrop) {
+    console.error("modalBackdrop not found in DOM");
+    return;
+  }
+
+  backdrop.classList.add("show");
+}
 function closeModal() {
-  document.getElementById("modalBackdrop").classList.remove("show");
+  const backdrop = document.getElementById("modalBackdrop");
+  if (backdrop) backdrop.classList.remove("show");
+
   document.getElementById("modalUsername").value = "";
   document.getElementById("modalPassword").value = "";
   document.getElementById("modalRole").value = "employee";
-}
 
+  const mf = document.getElementById("managerFields");
+  if (mf) mf.style.display = "none";
+}
 function openCreate() {
   openModal("Create User");
 }
@@ -193,11 +219,40 @@ async function submitModal() {
   if (!username) return showToast("Username required");
   if (role === "admin") return showToast("Cannot create admin users");
 
+  let profile = null;
+
+  if (role === "manager") {
+    profile = {
+      firstName: document.getElementById("mgrFirstName").value.trim(),
+      dob: document.getElementById("mgrDob").value,
+      pan: document.getElementById("mgrPan").value.trim(),
+      aadhar: document.getElementById("mgrAadhar").value.trim(),
+      mobile: document.getElementById("mgrMobile").value.trim(),
+      email: document.getElementById("mgrEmail").value.trim(),
+      location: document.getElementById("mgrLocation").value.trim(),
+      bank: {
+        accountNo: document.getElementById("mgrAccountNo").value.trim(),
+        ifsc: document.getElementById("mgrIfsc").value.trim(),
+        bankName: document.getElementById("mgrBank").value.trim()
+      }
+    };
+
+    // basic validation
+    if (!profile.firstName || !profile.mobile || !profile.email) {
+      return showToast("Manager personal details are required");
+    }
+  }
+
   try {
     const res = await fetch("/api/admin/users", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password, role })
+      body: JSON.stringify({
+        username,
+        password,
+        role,
+        profile   // only populated for manager
+      })
     });
 
     const data = await res.json();
@@ -206,9 +261,19 @@ async function submitModal() {
     closeModal();
     loadUsers();
     showToast("User created");
+
   } catch (err) {
     showToast(err.message || "Error creating user");
   }
+}
+
+const roleSelect = document.getElementById("modalRole");
+if (roleSelect) {
+  roleSelect.addEventListener("change", e => {
+    const isManager = e.target.value === "manager";
+    const mf = document.getElementById("managerFields");
+    if (mf) mf.style.display = isManager ? "block" : "none";
+  });
 }
 
 /* ---------------- DELETE USER ---------------- */
@@ -277,6 +342,55 @@ document.addEventListener("DOMContentLoaded", () => {
   document
     .getElementById("userSearch")
     ?.addEventListener("input", e => renderUsers(e.target.value));
+  document.getElementById("modalRole").addEventListener("change", e => {
+  const isManager = e.target.value === "manager";
+  document.getElementById("managerFields").style.display = isManager ? "block" : "none";
+});
+
+
 
   loadUsers();
 });
+
+function openManagerInfo(userId) {
+  const u = allUsers.find(x => x.id === userId);
+  if (!u) return;
+
+  document.getElementById("managerInfoBody").innerHTML = `
+    <div class="mgr-info">
+      <strong>${u.first_name || "-"}</strong><br>
+      📞 ${u.mobile || "-"}<br>
+      ✉️ ${u.email || "-"}<br>
+      📍 ${u.location || "-"}<br>
+      🏦 ${u.bank_name || "-"}
+    </div>
+  `;
+
+  document.getElementById("infoBackdrop").classList.add("show");
+}
+
+function closeManagerInfo() {
+  document.getElementById("infoBackdrop").classList.remove("show");
+}
+
+window.openManagerInfo = function (userId) {
+  const u = allUsers.find(x => x.id === userId);
+  if (!u) {
+    console.error("Manager not found", userId);
+    return;
+  }
+
+  document.getElementById("managerInfoBody").innerHTML = `
+    <strong>${u.first_name || "-"}</strong><br>
+    📞 ${u.mobile || "-"}<br>
+    ✉️ ${u.email || "-"}<br>
+    📍 ${u.location || "-"}<br>
+    🏦 ${u.bank_name || "-"}
+  `;
+
+  document.getElementById("infoBackdrop").classList.add("show");
+};
+
+window.closeManagerInfo = function () {
+  document.getElementById("infoBackdrop").classList.remove("show");
+};

@@ -47,8 +47,10 @@
               <th>Password</th>
               <th>Role</th>
               <th>Status</th>
+              <th>Info</th> <!-- NEW -->
               <th>Last Login</th>
               <th>Actions</th>
+
             </tr>
           </thead>
           <tbody id="managersTableBody"></tbody>
@@ -91,31 +93,113 @@
     </div>
 
     <!-- Create / Edit Modal -->
-    <div id="modalBackdrop" class="modal-backdrop" aria-hidden="true">
-      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-        <h3 id="modalTitle">Create User</h3>
-        <div class="form-row">
-          <label>Username</label>
-          <input id="modalUsername" />
-        </div>
-        <div class="form-row">
-          <label>Password</label>
-          <input id="modalPassword" type="password" />
-        </div>
-        <div class="form-row">
-          <label>Role</label>
-          <select id="modalRole">
-            <option value="employee">Employee</option>
-            <option value="manager">Manager</option>
-            <option value="dealer">Dealer</option>
-          </select>
-        </div>
-        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
-          <button class="action-btn" id="modalCancel">Cancel</button>
-          <button class="btn-primary" id="modalSubmit">Save</button>
+
+ <div id="modalBackdrop" class="modal-backdrop">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+
+    <h3 id="modalTitle">Create User</h3>
+
+    <div class="modal-body">
+
+      <div class="form-row">
+        <label>Username</label>
+        <input id="modalUsername" />
+      </div>
+
+      <div class="form-row">
+        <label>Password</label>
+        <input id="modalPassword" type="password" />
+      </div>
+
+      <div class="form-row">
+        <label>Role</label>
+        <select id="modalRole">
+          <option value="employee">Employee</option>
+          <option value="manager">Manager</option>
+          <option value="dealer">Dealer</option>
+        </select>
+      </div>
+
+      <!-- Manager fields -->
+        <div id="managerFields" style="display:none; margin-top:10px">
+
+          <h4>Personal Details</h4>
+
+          <div class="form-row">
+            <label>First Name</label>
+            <input id="mgrFirstName" />
+          </div>
+
+          <div class="form-row">
+            <label>Date of Birth</label>
+            <input id="mgrDob" type="date" />
+          </div>
+
+          <div class="form-row">
+            <label>PAN No</label>
+            <input id="mgrPan" />
+          </div>
+
+          <div class="form-row">
+            <label>Aadhar No</label>
+            <input id="mgrAadhar" />
+          </div>
+
+          <div class="form-row">
+            <label>Mobile No</label>
+            <input id="mgrMobile" />
+          </div>
+
+          <div class="form-row">
+            <label>Email</label>
+            <input id="mgrEmail" type="email" />
+          </div>
+
+          <div class="form-row">
+            <label>Location</label>
+            <input id="mgrLocation" />
+          </div>
+
+          <h4>Bank Details</h4>
+
+          <div class="form-row">
+            <label>Account No</label>
+            <input id="mgrAccountNo" />
+          </div>
+
+          <div class="form-row">
+            <label>IFSC</label>
+            <input id="mgrIfsc" />
+          </div>
+
+          <div class="form-row">
+            <label>Bank Name</label>
+            <input id="mgrBank" />
+          </div>
+
+        </div>      </div>
+
+    
+
+
+    <div class="modal-footer">
+      <button class="action-btn" id="modalCancel">Cancel</button>
+      <button class="btn-primary" id="modalSubmit">Save</button>
+    </div>
+
+  </div>
+</div>
+</div>
+
+      <div id="infoBackdrop" class="modal-backdrop">
+        <div class="modal" style="max-width:500px">
+          <h3>Manager Info</h3>
+          <div class="modal-body" id="managerInfoBody"></div>
+          <div class="modal-footer">
+            <button class="action-btn" id="closeInfoBtn">Close</button>
+          </div>
         </div>
       </div>
-    </div>
 
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
 

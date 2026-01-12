@@ -330,9 +330,6 @@ function openModal(lead) {
   modalContent.textContent = JSON.stringify(lead, null, 2);
   modalBackdrop.style.display = 'flex';
 }
-function closeModal() { modalBackdrop.style.display = 'none'; }
-if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
-modalBackdrop.addEventListener('click', (e) => { if (e.target === modalBackdrop) closeModal(); });
 
 // Events
 if (searchInput) searchInput.addEventListener('input', () => { applyFilters(); });

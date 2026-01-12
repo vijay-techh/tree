@@ -132,3 +132,62 @@
   z-index: 3000;
 }
 .toast.show { display: block; }
+
+
+.modal {
+  max-height: 85vh;          /* keep modal inside screen */
+  overflow: hidden;         /* prevent outer overflow */
+  display: flex;
+  flex-direction: column;
+}
+
+/* scrollable content inside modal */
+.modal > :not(h3):not(.modal-footer) {
+  overflow-y: auto;
+}
+
+/* better: wrap form content in a body */
+.modal-body {
+  overflow-y: auto;
+  max-height: 70vh;
+  padding-right: 8px;
+}
+
+/* smoother scrollbar */
+.modal-body::-webkit-scrollbar {
+  width: 6px;
+}
+.modal-body::-webkit-scrollbar-thumb {
+  background: #bbb;
+  border-radius: 4px;
+}
+
+.modal {
+  width: 520px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 12px;
+  border-top: 1px solid #eee;
+  background: white;
+}
+.mgr-info {
+  font-size: 12px;
+  line-height: 1.4;
+  color: #333;
+}
+.mgr-info strong {
+  font-size: 13px;
+}
