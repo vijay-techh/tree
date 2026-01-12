@@ -505,3 +505,29 @@ input, select {
   align-items: center;
 }
 
+/* Back Button */
+.back-button {
+  margin-top: 20px;
+  padding: 12px 16px;
+  background: #6b7280;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.back-button:hover {
+  background: #4b5563;
+  transform: translateX(-2px);
+}
+
+.back-button:active {
+  transform: translateX(0);
+}
+

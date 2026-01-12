@@ -343,6 +343,46 @@
         margin-bottom: 4px;
       }
     }
+    
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid #e2e8f0;
+    }
+    
+    .page-header h2 {
+      margin: 0;
+      color: #1e293b;
+      font-size: 24px;
+      font-weight: 600;
+    }
+    
+    .back-button {
+      padding: 10px 16px;
+      background: #6b7280;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .back-button:hover {
+      background: #4b5563;
+      transform: translateX(-2px);
+    }
+    
+    .back-button:active {
+      transform: translateX(0);
+    }
   </style>
 </head>
 <body>
@@ -350,7 +390,10 @@
 
 
 <main class="main">
-  <h2 id="pageHeading">All Leads</h2>
+  <div class="page-header">
+    <h2 id="pageHeading">All Leads</h2>
+    <a href="/dashboard.html" class="back-button">← Back to Dashboard</a>
+  </div>
 
   <div class="toolbar">
     <input id="searchInput" class="search" placeholder="Search" />
