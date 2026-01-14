@@ -774,6 +774,7 @@
     <div class="form-field">
       <label for="loanAmount">LOAN AMOUNT *</label>
       <input id="loanAmount" type="number" required />
+      <div id="emiDisplay" style="font-size:0.85rem;color:#374151;margin-top:6px;font-weight:600;"></div>
     </div>
 
     <div class="form-field">
@@ -781,6 +782,12 @@
       <select id="loanTenure" required>
         <option value="">TENURE *</option>
       </select>
+    </div>
+
+    <div class="form-field">
+      <label for="irr">IRR</label>
+      <input id="irr" type="number" step="0.01" placeholder="e.g. 12.5" />
+      <div id="irrDisplay" style="font-size:0.85rem;color:#374151;margin-top:6px;font-weight:600;"></div>
     </div>
 
   </div>

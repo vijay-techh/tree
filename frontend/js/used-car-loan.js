@@ -191,6 +191,9 @@ document.addEventListener('DOMContentLoaded', function() {
   // Load dealer options from server (admin users) if possible
   try { loadDealerOptions(); } catch (e) { /* ignore */ }
 
+  // Initialize EMI / IRR calculation display
+  try { initEmiCalculator(); } catch (e) { /* ignore */ }
+
   // Initialize MFG dropdowns
   const mfgMonth = document.getElementById("mfgMonth");
   const mfgYear = document.getElementById("mfgYear");
@@ -268,6 +271,60 @@ function updateProgress() {
   }
   
   return progress;
+}
+
+// EMI & IRR helpers
+function formatCurrency(v) {
+  if (v === null || v === undefined || isNaN(v)) return '-';
+  return '₹' + Number(v).toLocaleString(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 2 });
+}
+
+function formatPercent(v) {
+  if (v === null || v === undefined || isNaN(v)) return '-';
+  return Number(v).toFixed(2) + '% p.a.';
+}
+
+function computeAndShowEmi() {
+  const loanAmountEl = document.getElementById('loanAmount');
+  const tenureEl = document.getElementById('loanTenure');
+  const irrEl = document.getElementById('irr');
+  const emiDisplay = document.getElementById('emiDisplay');
+  const irrDisplay = document.getElementById('irrDisplay');
+
+  if (!loanAmountEl || !tenureEl || !irrEl || !emiDisplay || !irrDisplay) return;
+
+  const P = parseFloat(loanAmountEl.value) || 0;
+  const n = parseInt(tenureEl.value) || 0; // expecting months
+  const annualRate = parseFloat(irrEl.value) || 0;
+
+  if (!P || !n) {
+    emiDisplay.textContent = '';
+    irrDisplay.textContent = annualRate ? formatPercent(annualRate) : '';
+    return;
+  }
+
+  const r = annualRate / 12 / 100; // monthly rate
+  let emi = 0;
+  if (r === 0) {
+    emi = P / n;
+  } else {
+    const x = Math.pow(1 + r, n);
+    emi = P * r * x / (x - 1);
+  }
+
+  emiDisplay.textContent = 'Estimated EMI: ' + formatCurrency(emi) + ' / month';
+  irrDisplay.textContent = formatPercent(annualRate);
+}
+
+function initEmiCalculator() {
+  const loanAmountEl = document.getElementById('loanAmount');
+  const tenureEl = document.getElementById('loanTenure');
+  const irrEl = document.getElementById('irr');
+  if (loanAmountEl) loanAmountEl.addEventListener('input', computeAndShowEmi);
+  if (tenureEl) tenureEl.addEventListener('change', computeAndShowEmi);
+  if (irrEl) irrEl.addEventListener('input', computeAndShowEmi);
+  // initial compute
+  computeAndShowEmi();
 }
 
 // Fetch dealers (users with role 'dealer') and populate the dealer select
