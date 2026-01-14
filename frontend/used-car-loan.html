@@ -659,17 +659,33 @@
       <div>
         <label>Source</label>
         <select id="source">
-          <option>Self</option><option>Dealer</option><option>Bank</option><option>Walk-In</option><option>Telecall</option><option>Online</option><option>NC Customer</option><option>UC Customer</option><option>Others</option>
+          <option>Self</option><option>Dealer</option><option>Bank Emp</option><option>WheelsWeb</option><option>Telecall</option><option>Online</option><option>Others</option>
         </select>
       </div>
       
-      <div>
+      <div id="basicCaseDealerWrapper" class="form-field hidden">
         <label>Case Dealer</label>
-        <input id="basicCaseDealer" required data-uppercase data-alphabets />
+        <input id="basicCaseDealer" data-uppercase data-alphabets />
       </div>
-      <div>
+
+      <div id="basicCaseDealerSelectWrapper" class="form-field hidden">
+        <label>Select Dealer</label>
+        <select id="basicCaseDealerSelect">
+          <option value="">Select Dealer</option>
+          <option>Wheels Web</option>
+          <option>Girnar Software Pvt Ltd</option>
+          <option>Cars24</option>
+          <option>Cars Adda</option>
+          <option>Tractor Junction</option>
+          <option>Local Dealer A</option>
+          <option>Local Dealer B</option>
+          <option>Others</option>
+        </select>
+      </div>
+
+      <div id="basicRefWrapper" class="form-field hidden">
         <label>Ref Name / Mob No</label>
-        <input id="basicRefNameMobile" required />
+        <input id="basicRefNameMobile" />
       </div>
     </div>
 

@@ -77,6 +77,52 @@ enforceUppercase();
 enforceAlphabetsOnly();
 enforceNumbersOnly();
 
+// Toggle Basic 'Case Dealer' and 'Ref Name / Mob No' visibility based on Source
+function toggleBasicFieldsBySource() {
+  const source = document.getElementById('source');
+  if (!source) return;
+
+  const caseDealer = document.getElementById('basicCaseDealer');
+  const ref = document.getElementById('basicRefNameMobile');
+  const dealerSelect = document.getElementById('basicCaseDealerSelect');
+
+  const wrapperCase = document.getElementById('basicCaseDealerWrapper') || (caseDealer && (caseDealer.closest('div') || caseDealer.parentElement));
+  const wrapperRef = document.getElementById('basicRefWrapper') || (ref && (ref.closest('div') || ref.parentElement));
+  const wrapperSelect = document.getElementById('basicCaseDealerSelectWrapper') || (dealerSelect && (dealerSelect.closest('div') || dealerSelect.parentElement));
+
+  function applyVisibility() {
+    const val = (source.value || '').toLowerCase().trim();
+
+    if (val === 'others') {
+      if (wrapperCase) wrapperCase.classList.remove('hidden');
+      if (wrapperRef) wrapperRef.classList.remove('hidden');
+      if (wrapperSelect) wrapperSelect.classList.add('hidden');
+      if (caseDealer) caseDealer.required = true;
+      if (ref) ref.required = true;
+      if (dealerSelect) dealerSelect.required = false;
+    } else if (val === 'dealer') {
+      if (wrapperSelect) wrapperSelect.classList.remove('hidden');
+      if (wrapperCase) wrapperCase.classList.add('hidden');
+      // Show Ref Name / Mob No for manual editing when dealer selected
+      if (wrapperRef) wrapperRef.classList.remove('hidden');
+      if (dealerSelect) dealerSelect.required = true;
+      if (caseDealer) caseDealer.required = false;
+      if (ref) ref.required = false;
+    } else {
+      if (wrapperCase) wrapperCase.classList.add('hidden');
+      if (wrapperRef) wrapperRef.classList.add('hidden');
+      if (wrapperSelect) wrapperSelect.classList.add('hidden');
+      if (caseDealer) caseDealer.required = false;
+      if (ref) ref.required = false;
+      if (dealerSelect) dealerSelect.required = false;
+    }
+  }
+
+  source.addEventListener('change', applyVisibility);
+  // ensure initial state
+  applyVisibility();
+}
+
 /* =========================
    AUTOMATIC LOAN ID GENERATION
 ========================= */
@@ -138,6 +184,12 @@ document.addEventListener('DOMContentLoaded', function() {
   if (form) {
     form.addEventListener('submit', handleFormSubmit);
   }
+
+  // Initialize basic field visibility based on Source selection
+  try { toggleBasicFieldsBySource(); } catch (e) { /* ignore if elements missing */ }
+
+  // Load dealer options from server (admin users) if possible
+  try { loadDealerOptions(); } catch (e) { /* ignore */ }
 
   // Initialize MFG dropdowns
   const mfgMonth = document.getElementById("mfgMonth");
@@ -216,6 +268,65 @@ function updateProgress() {
   }
   
   return progress;
+}
+
+// Fetch dealers (users with role 'dealer') and populate the dealer select
+async function loadDealerOptions() {
+  const dealerSelect = document.getElementById('basicCaseDealerSelect');
+  if (!dealerSelect) return;
+
+  // Try to use logged-in user id as admin header if available
+  let admin = null;
+  try { admin = JSON.parse(localStorage.getItem('user') || 'null'); } catch (e) { admin = null; }
+
+  try {
+    const headers = {};
+    if (admin && admin.id) headers['x-admin-id'] = admin.id;
+
+    const res = await fetch('/api/admin/users', { headers });
+    if (!res.ok) {
+      // cannot fetch (likely not admin) — leave default options
+      return;
+    }
+
+    const users = await res.json();
+    const dealers = Array.isArray(users) ? users.filter(u => (u.role || '').toLowerCase() === 'dealer' && u.status !== 'inactive') : [];
+
+    // Clear existing (but keep first placeholder)
+    const placeholder = dealerSelect.querySelector('option[value=""]');
+    dealerSelect.innerHTML = '';
+    if (placeholder) dealerSelect.appendChild(placeholder);
+
+    dealers.forEach(d => {
+      const opt = document.createElement('option');
+      // Prefer a readable name if available, fall back to username
+      opt.textContent = d.username || (d.first_name || 'Dealer');
+      opt.value = d.username || d.id;
+      dealerSelect.appendChild(opt);
+    });
+
+    // keep an 'Others' option
+    const othersOpt = document.createElement('option');
+    othersOpt.value = 'Others';
+    othersOpt.textContent = 'Others';
+    dealerSelect.appendChild(othersOpt);
+
+    // If user selects 'Others' in dealer select, show manual Case Dealer input
+    dealerSelect.addEventListener('change', () => {
+      const wrapperCase = document.getElementById('basicCaseDealerWrapper');
+      if (!wrapperCase) return;
+      if ((dealerSelect.value || '').toLowerCase() === 'others') {
+        wrapperCase.classList.remove('hidden');
+        const caseDealer = document.getElementById('basicCaseDealer'); if (caseDealer) caseDealer.required = true;
+      } else {
+        wrapperCase.classList.add('hidden');
+        const caseDealer = document.getElementById('basicCaseDealer'); if (caseDealer) caseDealer.required = false;
+      }
+    });
+
+  } catch (err) {
+    console.error('Failed to load dealers', err);
+  }
 }
 
 // Form validation and submission
