@@ -85,36 +85,67 @@ function toggleBasicFieldsBySource() {
   const caseDealer = document.getElementById('basicCaseDealer');
   const ref = document.getElementById('basicRefNameMobile');
   const dealerSelect = document.getElementById('basicCaseDealerSelect');
+  const dealerNameInput = document.getElementById('basicDealerName');
 
   const wrapperCase = document.getElementById('basicCaseDealerWrapper') || (caseDealer && (caseDealer.closest('div') || caseDealer.parentElement));
   const wrapperRef = document.getElementById('basicRefWrapper') || (ref && (ref.closest('div') || ref.parentElement));
   const wrapperSelect = document.getElementById('basicCaseDealerSelectWrapper') || (dealerSelect && (dealerSelect.closest('div') || dealerSelect.parentElement));
+  const wrapperDealerName = document.getElementById('basicDealerNameWrapper') || (dealerNameInput && (dealerNameInput.closest('div') || dealerNameInput.parentElement));
 
   function applyVisibility() {
     const val = (source.value || '').toLowerCase().trim();
+    
+    // 🎯 Auto-populate dealer name when dealer selects "Dealer" source
+    if (val === 'dealer') {
+      const user = getUserFromStorage();
+      if (user && user.role === 'dealer' && dealerNameInput) {
+        dealerNameInput.value = user.username;
+        dealerNameInput.style.backgroundColor = '#f8fafc';
+        dealerNameInput.style.color = '#6b7280';
+        console.log(`🏷️ Auto-populated dealer name: ${user.username}`);
+      }
+    }
 
     if (val === 'others') {
       if (wrapperCase) wrapperCase.classList.remove('hidden');
       if (wrapperRef) wrapperRef.classList.remove('hidden');
       if (wrapperSelect) wrapperSelect.classList.add('hidden');
+      if (wrapperDealerName) wrapperDealerName.classList.add('hidden');
       if (caseDealer) caseDealer.required = true;
       if (ref) ref.required = true;
       if (dealerSelect) dealerSelect.required = false;
+      if (dealerNameInput) dealerNameInput.required = false;
     } else if (val === 'dealer') {
-      if (wrapperSelect) wrapperSelect.classList.remove('hidden');
-      if (wrapperCase) wrapperCase.classList.add('hidden');
+      const user = getUserFromStorage();
+      if (user && user.role === 'dealer') {
+        // Dealer logged in - show dealer name field (auto-populated)
+        if (wrapperDealerName) wrapperDealerName.classList.remove('hidden');
+        if (wrapperSelect) wrapperSelect.classList.add('hidden');
+        if (wrapperCase) wrapperCase.classList.add('hidden');
+        if (dealerNameInput) dealerNameInput.required = true;
+        if (dealerSelect) dealerSelect.required = false;
+        if (caseDealer) caseDealer.required = false;
+      } else {
+        // Non-dealer user - show dealer dropdown
+        if (wrapperSelect) wrapperSelect.classList.remove('hidden');
+        if (wrapperDealerName) wrapperDealerName.classList.add('hidden');
+        if (wrapperCase) wrapperCase.classList.add('hidden');
+        if (dealerSelect) dealerSelect.required = true;
+        if (dealerNameInput) dealerNameInput.required = false;
+        if (caseDealer) caseDealer.required = false;
+      }
       // Show Ref Name / Mob No for manual editing when dealer selected
       if (wrapperRef) wrapperRef.classList.remove('hidden');
-      if (dealerSelect) dealerSelect.required = true;
-      if (caseDealer) caseDealer.required = false;
       if (ref) ref.required = false;
     } else {
       if (wrapperCase) wrapperCase.classList.add('hidden');
       if (wrapperRef) wrapperRef.classList.add('hidden');
       if (wrapperSelect) wrapperSelect.classList.add('hidden');
+      if (wrapperDealerName) wrapperDealerName.classList.add('hidden');
       if (caseDealer) caseDealer.required = false;
       if (ref) ref.required = false;
       if (dealerSelect) dealerSelect.required = false;
+      if (dealerNameInput) dealerNameInput.required = false;
     }
   }
 
@@ -155,6 +186,40 @@ function initializeRoleBasedVisibility() {
       field.removeAttribute('required');
       field.dataset.wasRequired = 'true'; // Mark as was required for later
     });
+    
+    // 🎯 Hide Source dropdown for dealers and auto-set to "Dealer"
+    const sourceWrapper = document.getElementById('sourceWrapper');
+    const source = document.getElementById('source');
+    if (sourceWrapper && source) {
+      sourceWrapper.style.display = 'none';
+      source.value = 'Dealer'; // Auto-set source to "Dealer"
+    }
+    
+    // 🎯 Show Dealer Name field and auto-populate
+    const dealerNameWrapper = document.getElementById('basicDealerNameWrapper');
+    const dealerNameInput = document.getElementById('basicDealerName');
+    if (dealerNameWrapper && dealerNameInput) {
+      dealerNameWrapper.classList.remove('hidden');
+      dealerNameInput.value = user.username;
+      dealerNameInput.style.backgroundColor = '#f8fafc';
+      dealerNameInput.style.color = '#6b7280';
+      dealerNameInput.required = true;
+      console.log(`🏷️ Auto-populated dealer name for dealer: ${user.username}`);
+    }
+    
+    // 🎯 Show Ref Name / Mob No field for dealers
+    const refWrapper = document.getElementById('basicRefWrapper');
+    const refInput = document.getElementById('basicRefNameMobile');
+    if (refWrapper && refInput) {
+      refWrapper.classList.remove('hidden');
+      refInput.required = true;
+    }
+    
+    // Hide all other dealer-related fields
+    const caseDealerWrapper = document.getElementById('basicCaseDealerWrapper');
+    const dealerSelectWrapper = document.getElementById('basicCaseDealerSelectWrapper');
+    if (caseDealerWrapper) caseDealerWrapper.classList.add('hidden');
+    if (dealerSelectWrapper) dealerSelectWrapper.classList.add('hidden');
     
     // Update form header for dealer
     updateFormHeaderForDealer();
@@ -281,6 +346,9 @@ function submitDealerForm() {
   for (let [key, value] of formData.entries()) {
     data[key] = value;
   }
+  
+  // 🎯 Ensure source is set to "Dealer" for dealer submissions
+  data.source = 'Dealer';
   
   // Add user information
   data.userId = user.id;
@@ -419,6 +487,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Load dealer options from server (admin users) if possible
   try { loadDealerOptions(); } catch (e) { /* ignore */ }
+
+  // 🎯 Auto-populate dealer name on page load if dealer is logged in and source is "Dealer"
+  const user = getUserFromStorage();
+  const source = document.getElementById('source');
+  const dealerNameInput = document.getElementById('basicDealerName');
+  
+  if (user && user.role === 'dealer' && source && source.value === 'dealer' && dealerNameInput) {
+    dealerNameInput.value = user.username;
+    dealerNameInput.style.backgroundColor = '#f8fafc';
+    dealerNameInput.style.color = '#6b7280';
+    console.log(`🏷️ Auto-populated dealer name on load: ${user.username}`);
+  }
 
   // Initialize EMI / IRR calculation display
   try { initEmiCalculator(); } catch (e) { /* ignore */ }

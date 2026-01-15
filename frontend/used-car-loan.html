@@ -664,7 +664,7 @@
         <label>Date & Time</label>
         <input id="dateTime" readonly />
       </div>
-      <div>
+      <div id="sourceWrapper">
         <label>Source</label>
         <select id="source">
           <option>Self</option><option>Dealer</option><option>Bank Emp</option><option>WheelsWeb</option><option>Telecall</option><option>Online</option><option>Others</option>
@@ -687,8 +687,12 @@
           <option>Tractor Junction</option>
           <option>Local Dealer A</option>
           <option>Local Dealer B</option>
-          <option>Others</option>
         </select>
+      </div>
+
+      <div id="basicDealerNameWrapper" class="form-field hidden">
+        <label>Dealer Name</label>
+        <input id="basicDealerName" data-uppercase data-alphabets readonly />
       </div>
 
       <div id="basicRefWrapper" class="form-field hidden">
