@@ -463,17 +463,16 @@ app.post("/api/validate-pincode", async (req, res) => {
 // ----------------- Admin users -----------------
 app.get("/api/admin/users", async (req, res) => {
   try {
-    const userId = parseInt(req.headers["x-user-id"] || req.headers["x-admin-id"]);
-    if (!userId) return res.status(403).json({ error: "Unauthorized" });
+    const adminId = parseInt(req.headers["x-admin-id"]);
+    if (!adminId) return res.status(403).json({ error: "Unauthorized" });
 
-    // Check if user is authenticated (any role can access dealer list)
-    const userCheck = await pool.query(
+    const adminCheck = await pool.query(
       "SELECT role FROM users WHERE id = $1 AND deleted_at IS NULL",
-      [userId]
+      [adminId]
     );
 
-    if (!userCheck.rows.length) {
-      return res.status(403).json({ error: "Unauthorized" });
+    if (!adminCheck.rows.length || adminCheck.rows[0].role !== "admin") {
+      return res.status(403).json({ error: "Only admins may access this resource" });
     }
 
     const { rows } = await pool.query(`
@@ -502,7 +501,7 @@ SELECT
 FROM users u
 LEFT JOIN manager_profiles mp ON mp.user_id = u.id
 LEFT JOIN employee_profiles ep ON ep.user_id = u.id
-WHERE u.deleted_at IS NULL AND u.role = 'dealer'
+WHERE u.deleted_at IS NULL
 ORDER BY u.id DESC;
 
     `);

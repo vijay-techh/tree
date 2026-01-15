@@ -640,24 +640,22 @@ function initEmiCalculator() {
   computeAndShowEmi();
 }
 
-// Fetch dealers (users with role 'dealer') and populate dealer select
+// Fetch dealers (users with role 'dealer') and populate the dealer select
 async function loadDealerOptions() {
   const dealerSelect = document.getElementById('basicCaseDealerSelect');
   if (!dealerSelect) return;
 
-  // Try to use logged-in user id as header if available
-  let user = null;
-  try { user = JSON.parse(localStorage.getItem('user') || 'null'); } catch (e) { user = null; }
+  // Try to use logged-in user id as admin header if available
+  let admin = null;
+  try { admin = JSON.parse(localStorage.getItem('user') || 'null'); } catch (e) { admin = null; }
 
   try {
     const headers = {};
-    // Add user ID header for any logged-in user (not just admin)
-    if (user && user.id) headers['x-user-id'] = user.id;
+    if (admin && admin.id) headers['x-admin-id'] = admin.id;
 
     const res = await fetch('/api/admin/users', { headers });
     if (!res.ok) {
-      console.warn('Cannot fetch dealers, using default options');
-      // cannot fetch — leave default options
+      // cannot fetch (likely not admin) — leave default options
       return;
     }
 
@@ -682,8 +680,6 @@ async function loadDealerOptions() {
     othersOpt.value = 'Others';
     othersOpt.textContent = 'Others';
     dealerSelect.appendChild(othersOpt);
-
-    console.log(`Loaded ${dealers.length} dealers:`, dealers.map(d => d.username));
 
     // If user selects 'Others' in dealer select, show manual Case Dealer input
     dealerSelect.addEventListener('change', () => {
