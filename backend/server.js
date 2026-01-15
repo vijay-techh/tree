@@ -1017,7 +1017,19 @@ app.post("/api/khata/credit", async (req, res) => {
       [dealerId, points, reason, adminId]
     );
     
+    // Create notification for the dealer
+    await pool.query(
+      `INSERT INTO notifications (user_id, message, type)
+       VALUES ($1, $2, $3)`,
+      [
+        dealerId,
+        `Admin credited ${points} points to your account. Reason: ${reason}`,
+        'khata_credit'
+      ]
+    );
+    
     console.log(`✅ Admin ${adminId} credited ${points} points to dealer ${dealerId} (${dealerResult.rows[0].username})`);
+    console.log(`🔔 Notification sent to dealer ${dealerId}`);
     
     res.json({ 
       success: true, 
@@ -1225,6 +1237,75 @@ app.get("/api/khata/dealers", async (req, res) => {
   } catch (err) {
     console.error("KHATA DEALERS ERROR:", err);
     res.status(500).json({ error: "Failed to fetch dealers" });
+  }
+});
+
+// GET /api/dealer/notifications - Get dealer notifications
+app.get("/api/dealer/notifications", async (req, res) => {
+  try {
+    const dealerId = parseInt(req.headers["x-dealer-id"]);
+    if (!dealerId) return res.status(403).json({ error: "Dealer authentication required" });
+
+    // Validate dealer role
+    const dealerCheck = await pool.query(
+      "SELECT role FROM users WHERE id = $1 AND deleted_at IS NULL",
+      [dealerId]
+    );
+    if (dealerCheck.rows.length === 0 || dealerCheck.rows[0].role !== 'dealer') {
+      return res.status(403).json({ error: "Dealer access required" });
+    }
+
+    // Get notifications ordered by newest first
+    const notificationsResult = await pool.query(
+      `SELECT id, message, is_read, created_at, type 
+       FROM notifications 
+       WHERE user_id = $1 
+       ORDER BY created_at DESC`,
+      [dealerId]
+    );
+
+    res.json({
+      notifications: notificationsResult.rows,
+      unreadCount: notificationsResult.rows.filter(n => !n.is_read).length
+    });
+
+  } catch (err) {
+    console.error("Get dealer notifications error:", err);
+    res.status(500).json({ error: "Failed to get notifications" });
+  }
+});
+
+// POST /api/dealer/notifications/read - Mark dealer notifications as read
+app.post("/api/dealer/notifications/read", async (req, res) => {
+  try {
+    const dealerId = parseInt(req.headers["x-dealer-id"]);
+    if (!dealerId) return res.status(403).json({ error: "Dealer authentication required" });
+
+    // Validate dealer role
+    const dealerCheck = await pool.query(
+      "SELECT role FROM users WHERE id = $1 AND deleted_at IS NULL",
+      [dealerId]
+    );
+    if (dealerCheck.rows.length === 0 || dealerCheck.rows[0].role !== 'dealer') {
+      return res.status(403).json({ error: "Dealer access required" });
+    }
+
+    // Mark all notifications for this dealer as read
+    const result = await pool.query(
+      `UPDATE notifications 
+       SET is_read = true 
+       WHERE user_id = $1 AND is_read = false`,
+      [dealerId]
+    );
+
+    res.json({ 
+      success: true, 
+      markedAsRead: result.rowCount 
+    });
+
+  } catch (err) {
+    console.error("Mark dealer notifications read error:", err);
+    res.status(500).json({ error: "Failed to mark notifications as read" });
   }
 });
 

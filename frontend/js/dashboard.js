@@ -25,6 +25,12 @@ if (user.role === "admin") {
   // Show dealer menu for dealers
   if (myKhataMenu) myKhataMenu.style.display = "block";
   
+  // Show notification bell for dealers
+  const notificationBell = document.getElementById("notificationBell");
+  if (notificationBell) {
+    notificationBell.style.display = "block";
+  }
+  
   // Hide admin menus
   if (adminMenu) adminMenu.style.display = "none";
   if (assignMenu) assignMenu.style.display = "none";
@@ -46,16 +52,19 @@ function logout() {
 let notificationPollingInterval;
 
 async function loadNotifications() {
-  if (user.role !== "admin") {
-    console.log("❌ User is not admin, skipping notifications");
+  if (user.role !== "admin" && user.role !== "dealer") {
+    console.log("❌ User is not admin or dealer, skipping notifications");
     return;
   }
   
-  console.log("🔔 Loading notifications for admin:", user.id);
+  console.log(`🔔 Loading notifications for ${user.role}:`, user.id);
   
   try {
-    const res = await fetch("/api/admin/notifications", {
-      headers: { "x-admin-id": user.id }
+    const endpoint = user.role === "admin" ? "/api/admin/notifications" : "/api/dealer/notifications";
+    const header = user.role === "admin" ? { "x-admin-id": user.id } : { "x-dealer-id": user.id };
+    
+    const res = await fetch(endpoint, {
+      headers: header
     });
     
     console.log("📡 Notifications API response status:", res.status);
@@ -115,13 +124,16 @@ function formatNotificationTime(createdAt) {
 }
 
 async function markAllNotificationsAsRead() {
-  if (user.role !== "admin") return;
+  if (user.role !== "admin" && user.role !== "dealer") return;
   
   try {
-    const res = await fetch("/api/admin/notifications/read", {
+    const endpoint = user.role === "admin" ? "/api/admin/notifications/read" : "/api/dealer/notifications/read";
+    const header = user.role === "admin" ? { "x-admin-id": user.id } : { "x-dealer-id": user.id };
+    
+    const res = await fetch(endpoint, {
       method: "POST",
       headers: { 
-        "x-admin-id": user.id,
+        ...header,
         "Content-Type": "application/json"
       }
     });
@@ -155,12 +167,12 @@ function toggleNotificationDropdown() {
 function initNotificationSystem() {
   console.log("🚀 Initializing notification system for user:", user.role, user.id);
   
-  if (user.role !== "admin") {
-    console.log("❌ User is not admin, notification system disabled");
+  if (user.role !== "admin" && user.role !== "dealer") {
+    console.log("❌ User is not admin or dealer, notification system disabled");
     return;
   }
   
-  console.log("✅ Admin user detected, setting up notifications");
+  console.log(`✅ ${user.role} user detected, setting up notifications`);
   
   // Load notifications on page load
   loadNotifications();
