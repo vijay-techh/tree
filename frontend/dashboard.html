@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>WheelsWeb | Dashboard</title>
+  <link rel="stylesheet" href="/css/dashboard.css" />
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">WheelsWeb</div>
+
+<nav class="sidebar-nav">
+  <a class="active" href="/dashboard.html">Overview</a>
+  <a href="/new-lead.html">Start New Application</a>
+  <a href="/view-cases.html">View All Cases</a>
+</nav>
+
+
+    <div class="logout" onclick="logout()">Logout</div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main">
+    <!-- Header -->
+    <header class="header">
+      <h2>Business Performance</h2>
+
+      <div class="filters">
+        <input type="date" />
+        <input type="date" />
+        <select>
+          <option>Product Type</option>
+          <option>New Car</option>
+          <option>Used Car</option>
+        </select>
+        <button>Search</button>
+      </div>
+    </header>
+
+    <!-- Cards -->
+    <section class="cards">
+      <div class="card">
+        <h4>Total Disbursed Amount</h4>
+        <p class="amount">₹ 21,40,533</p>
+      </div>
+
+      <div class="card">
+        <h4>Total Disbursed Cases</h4>
+        <p class="amount">6</p>
+      </div>
+    </section>
+
+    <!-- Chart Placeholder -->
+    <section class="chart">
+      <h4>Business Type Distribution</h4>
+      <div class="bar">
+        <div class="bar-fill">Used Car</div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>
